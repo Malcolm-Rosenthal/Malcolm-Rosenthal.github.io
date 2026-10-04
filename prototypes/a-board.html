@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" data-look="garden">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prototype A: the site is a board</title>
+<link rel="stylesheet" href="look.css">
+<style>
+  /* The home board. On a wide screen it is a hand-arranged surface: twelve
+     columns, with each piece nudged off the grid so it reads as placed rather
+     than tabulated. On a phone the same pieces stack in reading order. */
+  .board { max-width: 1180px; margin: 0 auto; padding: 26px 20px 10px;
+    display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 30px 28px; align-items: start; }
+  .p-note     { grid-column: 1 / span 5; margin-top: 34px; }
+  .p-photo    { grid-column: 6 / span 2; margin-top: 12px; }
+  .p-research { grid-column: 8 / span 5; margin-top: 58px; }
+  .p-teaching { grid-column: 1 / span 4; margin-top: 30px; }
+  .p-projects { grid-column: 5 / span 5; margin-top: 54px; }
+  .p-links    { grid-column: 10 / span 3; margin-top: 18px; }
+  .p-blog     { grid-column: 2 / span 9; margin-top: 30px; }
+  @media (max-width: 860px) {
+    .board { grid-template-columns: 1fr; gap: 22px; padding: 18px 16px 6px; }
+    .board > * { grid-column: 1 !important; margin-top: 26px; }
+    .p-note, .p-photo { margin-top: 0; }
+    .p-photo { max-width: 160px; }
+    .door { width: calc(50% - 8px); }
+  }
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <a class="brand" href="#">Malcolm Rosenthal</a>
+  <span class="crumb">Home</span>
+  <span class="spacer"></span>
+  <button class="btn small" data-set-look="garden">Garden</button>
+  <button class="btn small" data-set-look="table">Table</button>
+  <button class="btn small" data-set-look="chunky">Chunky</button>
+</header>
+
+<main class="board">
+
+  <section class="note p-note">
+    <span class="pin"></span>
+    <div class="kicker">Etc. Spider time!</div>
+    <h1>Malcolm Rosenthal</h1>
+    <span class="slot">YOUR WORDS: a sentence or two on who you are. A note is the reading surface; it can be as long as it needs to be.</span>
+  </section>
+
+  <img class="photo p-photo" alt="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E">
+
+  <section class="mat mc-slate tex-cork p-research">
+    <a class="tab" href="#">Research</a>
+    <div class="doors">
+      <a class="door t-research" href="#"><div class="name">Publications</div><div class="degree">—</div></a>
+      <a class="door t-research" href="#"><div class="name">Talks</div><div class="degree">—</div></a>
+      <a class="door t-research" href="#"><div class="name">CV</div><div class="degree">—</div></a>
+      <a class="door t-research empty" href="#"><div class="name">a research thread you name</div></a>
+    </div>
+  </section>
+
+  <section class="mat mc-tan tex-paper p-teaching">
+    <a class="tab" href="#">Teaching</a>
+    <div class="doors">
+      <a class="door t-teaching" href="#"><div class="name">Courses</div><div class="degree">—</div></a>
+      <a class="door t-teaching empty" href="#"><div class="name">a course or resource</div></a>
+    </div>
+  </section>
+
+  <section class="mat mc-moss tex-grid p-projects">
+    <a class="tab" href="#">Projects</a>
+    <div class="doors">
+      <a class="door t-projects" href="#"><div class="name">The Board</div><div class="degree">—</div></a>
+      <a class="door t-projects empty" href="#"><div class="name">a project</div></a>
+      <a class="door t-projects empty" href="#"><div class="name">a project</div></a>
+    </div>
+  </section>
+
+  <section class="mat mc-indigo p-links">
+    <span class="tab">Elsewhere</span>
+    <div class="doors">
+      <a class="door t-links" href="#"><div class="name">Email</div></a>
+      <a class="door t-links" href="#"><div class="name">Scholar</div></a>
+    </div>
+  </section>
+
+  <section class="mat mc-plum p-blog">
+    <a class="tab" href="#">Blog</a>
+    <div class="doors">
+      <a class="door t-blog empty" href="#"><div class="name">newest post title</div><div class="degree">date</div></a>
+      <a class="door t-blog empty" href="#"><div class="name">post title</div><div class="degree">date</div></a>
+      <a class="door t-blog empty" href="#"><div class="name">post title</div><div class="degree">date</div></a>
+      <a class="door t-blog" href="#"><div class="name">All posts</div><div class="degree">—</div></a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot">prototype A · dashed boxes are slots for your text, not design</footer>
+
+<script>
+  document.querySelectorAll('[data-set-look]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      document.documentElement.dataset.look = b.dataset.setLook;
+      document.querySelectorAll('[data-set-look]').forEach(function (o) { o.classList.toggle('on', o === b); });
+    });
+    if (b.dataset.setLook === document.documentElement.dataset.look) b.classList.add('on');
+  });
+</script>
+</body>
+</html>

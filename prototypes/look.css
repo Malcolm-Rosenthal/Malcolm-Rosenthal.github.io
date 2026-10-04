@@ -1,0 +1,190 @@
+/* ============================================================================
+   The look, carried over from The Board (website-seed/styles/looks.css).
+
+   The same five rules, applied everywhere:
+     · hard shadows only: a solid block down and to the right, no blur
+     · everything has a real, dark outline
+     · fills are opaque and flat
+     · one or two corner shapes
+     · matte: lit means a colour or a heavier outline
+
+   Token names and values are the app's own, so a change there can be copied
+   here by name. Only the subset a website needs is kept.
+   ========================================================================== */
+
+:root, [data-look="garden"] {
+  --lk-ink: #1c2419;
+  --lk-ink-soft: #4a5642;
+  --lk-board: #dde6c2;
+  --lk-bar: #2f4d2c;
+  --lk-bar-ink: #fbf8ea;
+  --lk-brand: #f2d98a;
+  --lk-paper: #fbf8ea;
+  --lk-btn: #e9efd2;
+  --lk-btn-ink: #1c2419;
+  --lk-accent: #f2a93b;
+  --lk-on-board: #2f4d2c;
+  --lk-hover: #f6efd6;
+  --lk-string: #b5482f;
+  --lk-line: 2px;
+  --lk-r-tile: 6px;
+  --lk-r-note: 3px;
+  --lk-r-btn: 6px;
+  --lk-r-crumb: 2px 7px 7px 2px;
+  --lk-r-mat: 8px;
+  --lk-mat-line: 2px;
+  --mc-slate: #bcd6ea; --mc-moss: #b5cf8a; --mc-tan: #f3d977; --mc-indigo: #cbc6ee; --mc-plum: #f5c8d5;
+  --patterns: 1;
+}
+
+[data-look="table"] {
+  --lk-ink: #0f1a0d;
+  --lk-board: #25401f;
+  --lk-bar: #1b2e18;
+  --lk-brand: #f2a93b;
+  --lk-btn: #2f4d2c;
+  --lk-btn-ink: #fbf8ea;
+  --lk-on-board: #d9e3c3;
+}
+
+[data-look="chunky"] {
+  --lk-ink: #111111;
+  --lk-ink-soft: #444444;
+  --lk-board: #f6f5ea;
+  --lk-bar: #e6ebd3;
+  --lk-bar-ink: #111111;
+  --lk-brand: #2f7a32;
+  --lk-paper: #ffffff;
+  --lk-btn: #ffffff;
+  --lk-btn-ink: #111111;
+  --lk-accent: #8fd07a;
+  --lk-on-board: #333333;
+  --lk-hover: #f4f4ea;
+  --lk-line: 3px;
+  --lk-r-tile: 12px;
+  --lk-r-note: 0;
+  --lk-r-btn: 9px;
+  --lk-r-crumb: 0;
+  --lk-r-mat: 0;
+  --lk-mat-line: 3px;
+  --mc-slate: #7fb8e6; --mc-moss: #8fd07a; --mc-tan: #ffd23f; --mc-indigo: #a99cf0; --mc-plum: #ff9fbf;
+}
+
+:root {
+  --rest: 2px;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  --font-serif: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--lk-board); color: var(--lk-ink); }
+body { font-family: var(--font-sans); font-size: 16px; line-height: 1.5; min-height: 100vh; }
+a { color: inherit; }
+
+/* ---- the bar ------------------------------------------------------------ */
+
+.bar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 12px; padding: 9px 16px;
+  background: var(--lk-bar); border-bottom: 3px solid var(--lk-ink); position: sticky; top: 0; z-index: 10; }
+.brand { font-family: var(--font-mono); letter-spacing: .14em; font-weight: 700; font-size: 14px;
+  color: var(--lk-brand); text-decoration: none; text-transform: uppercase; margin-right: 6px; }
+.brand:hover { color: var(--lk-accent); }
+.bar .spacer { flex: 1; }
+
+/* A crumb: paper, with the coloured strip down its left edge. */
+.crumb { position: relative; overflow: hidden; display: inline-block; font-family: var(--font-serif); font-weight: 700;
+  font-size: 13px; text-decoration: none; background: var(--lk-paper); color: var(--lk-ink);
+  border: 2px solid var(--lk-ink); border-radius: var(--lk-r-crumb); padding: 3px 9px 3px 15px;
+  box-shadow: 2px 2px 0 var(--lk-ink); }
+.crumb::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 6px;
+  background: var(--type-color, var(--lk-accent)); border-right: 2px solid var(--lk-ink); }
+
+.btn { font: 600 13px var(--font-sans); text-decoration: none; cursor: pointer; display: inline-block;
+  background: var(--lk-btn); color: var(--lk-btn-ink); border: 2px solid var(--lk-ink);
+  border-radius: var(--lk-r-btn); box-shadow: 2px 2px 0 var(--lk-ink); padding: 5px 11px; }
+.btn:hover { background: color-mix(in srgb, var(--lk-btn), #fff 30%); }
+/* A pressed button goes down onto its own shadow. */
+.btn:active { transform: translate(2px, 2px); box-shadow: 0 0 0 var(--lk-ink); }
+.btn.on { background: var(--lk-accent); color: #1c2419; }
+.btn.small { font-size: 11px; padding: 3px 8px; }
+
+/* ---- mats: a coloured surface with a folder tab for its name ------------ */
+
+.mc-slate { --mat-fill: var(--mc-slate); }
+.mc-moss { --mat-fill: var(--mc-moss); }
+.mc-tan { --mat-fill: var(--mc-tan); }
+.mc-indigo { --mat-fill: var(--mc-indigo); }
+.mc-plum { --mat-fill: var(--mc-plum); }
+
+.mat { position: relative; margin-top: 26px; padding: 20px; color: #1c2419;
+  background-color: var(--mat-fill, var(--mc-slate));
+  --pat: color-mix(in srgb, var(--mat-fill, var(--mc-slate)) 62%, var(--lk-ink));
+  border: var(--lk-mat-line) solid var(--lk-ink); border-radius: var(--lk-r-mat);
+  border-top-left-radius: 0;
+  box-shadow: var(--rest) var(--rest) 0 var(--lk-ink); }
+.mat > .tab { position: absolute; left: calc(-1 * var(--lk-mat-line)); bottom: 100%;
+  padding: 3px 12px 2px; background: var(--mat-fill, var(--mc-slate)); color: #1c2419;
+  border: var(--lk-mat-line) solid var(--lk-ink); border-bottom: none; border-radius: 6px 6px 0 0;
+  font: 700 11.5px var(--font-sans); letter-spacing: .08em; text-transform: uppercase; text-decoration: none;
+  white-space: nowrap; }
+a.tab:hover { background: var(--lk-accent); }
+[data-look="chunky"] .mat > .tab { background: var(--lk-ink); color: #fff; border-radius: 0; }
+
+/* The materials. Chunky draws only the colour, as Bold mats do in the app. */
+.tex-cork { background-image: radial-gradient(var(--pat) 1.4px, transparent 1.6px); background-size: 8px 8px; }
+.tex-grid { background-image: repeating-linear-gradient(45deg, var(--pat) 0 1.5px, transparent 1.5px 9px),
+  repeating-linear-gradient(-45deg, var(--pat) 0 1.5px, transparent 1.5px 9px); }
+.tex-paper { background-image: repeating-linear-gradient(0deg, var(--pat) 0 2px, transparent 2px 7px); }
+[data-look="chunky"] :is(.tex-cork, .tex-grid, .tex-paper) { background-image: none; }
+
+/* ---- doors: name + a band of type colour, nothing else ------------------ */
+
+.door { position: relative; display: block; width: 150px; min-height: 76px; padding: 20px 10px 8px;
+  text-decoration: none; background: var(--lk-paper); color: #1c2419;
+  border: var(--lk-line) solid var(--lk-ink); border-radius: var(--lk-r-tile);
+  box-shadow: var(--rest) var(--rest) 0 var(--lk-ink);
+  transition: box-shadow 140ms ease-out, transform 140ms ease-out; }
+.door::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 12px;
+  background: var(--type-color, var(--lk-accent)); border-bottom: var(--lk-line) solid var(--lk-ink);
+  border-radius: calc(var(--lk-r-tile) - 2px) calc(var(--lk-r-tile) - 2px) 0 0; }
+.door .name { font-family: var(--font-serif); font-weight: 700; font-size: 15px; line-height: 1.25; }
+.door .degree { font-family: var(--font-mono); font-size: 10px; color: #4a5642; margin-top: 6px; }
+/* Picked up: it rises off the surface and its shadow grows by the same amount. */
+.door:hover, .door:focus-visible { transform: translate(-4px, -4px); box-shadow: 6px 6px 0 var(--lk-ink); outline: none; }
+.door:focus-visible { box-shadow: 0 0 0 3px var(--lk-accent), 9px 9px 0 var(--lk-ink); }
+.door:active { transform: translate(2px, 2px); box-shadow: 0 0 0 var(--lk-ink); }
+.doors { display: flex; flex-wrap: wrap; gap: 16px; }
+
+.t-research { --type-color: #7fb8e6; }
+.t-teaching { --type-color: #ffd23f; }
+.t-blog { --type-color: #ff9fbf; }
+.t-projects { --type-color: #8fd07a; }
+.t-links { --type-color: #a99cf0; }
+
+/* ---- notes: paper you read ---------------------------------------------- */
+
+.note { background: var(--lk-paper); color: #1c2419; border: var(--lk-line) solid var(--lk-ink);
+  border-radius: var(--lk-r-note); box-shadow: var(--rest) var(--rest) 0 var(--lk-ink);
+  padding: 18px 20px; font-family: var(--font-serif); position: relative; }
+.note h1 { font-size: 34px; line-height: 1.1; margin: 0 0 6px; }
+.note h2 { font-size: 21px; margin: 0 0 8px; }
+.note p { margin: 0 0 .7em; }
+.note > :last-child { margin-bottom: 0; }
+.note a:not(.btn) { color: var(--lk-string); }
+.pin { position: absolute; top: -6px; left: 50%; margin-left: -6px; width: 12px; height: 12px;
+  border-radius: 50%; background: var(--lk-accent); border: 2px solid var(--lk-ink); }
+.kicker { font: 700 11px var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: #4a5642; }
+
+/* A picture, as a sticker: no frame, only the hard shadow. */
+.photo { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; background: var(--mc-slate);
+  border: var(--lk-line) solid var(--lk-ink); border-radius: var(--lk-r-note);
+  box-shadow: var(--rest) var(--rest) 0 var(--lk-ink); }
+
+/* ---- NOT PART OF THE DESIGN: where Mal's words go ----------------------- */
+
+.slot { display: block; border: 2px dashed #8b9580; border-radius: 3px; padding: 8px 10px; margin: 0 0 .7em;
+  font: 12px/1.45 var(--font-mono); color: #5d6a55; background: color-mix(in srgb, var(--lk-paper), #000 3%); }
+.door.empty { border-style: dashed; }
+.door.empty .name { font: 12px/1.4 var(--font-mono); color: #5d6a55; }
+
+.foot { padding: 28px 16px 40px; text-align: center; font: 11px var(--font-mono); color: var(--lk-on-board); }

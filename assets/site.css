@@ -3,70 +3,48 @@
 
    TWO STYLES, chosen by the visitor (assets/site.js, `data-style` on <html>):
 
-     fun      The Board's look, carried over from website-seed/styles/looks.css.
-              Hard shadows, real outlines, flat opaque fills, matte.
+     fun      The Board's Chunky look, carried over from the app's looks.css.
+              Hard shadows, heavy black outlines, flat saturated fills, matte.
      serious  The same pages with the materials taken away: one column, ink on
-              paper, hairlines. It is written at the BOTTOM of this file as a
-              set of overrides, so everything it changes is in one place.
+              off-white, hairlines. It is written at the BOTTOM of this file as
+              a set of overrides, so everything it changes is in one place.
 
-   The HTML is identical in both. Nothing is hidden from one and shown to the
-   other except the pin on a note.
+   The HTML is identical in both.
 
-   Token names and values are the app's own (`--lk-*`, `--mc-*`), so a change
-   there can be copied here by name.
+   Token names and values are the app's own (`--lk-*`, `--mc-*`, from
+   [data-look="chunky"] and [data-mats="bold"]), so a change there can be
+   copied here by name. Garden was tried beside it on 2026-10-04 and lost on
+   legibility; it is in git at dd9564a.
    ========================================================================== */
 
-:root, [data-look="garden"] {
-  --lk-ink: #1c2419;
-  --lk-ink-soft: #4a5642;
-  --lk-board: #dde6c2;
-  --lk-bar: #2f4d2c;
-  --lk-bar-ink: #fbf8ea;
-  --lk-brand: #f2d98a;
-  --lk-paper: #fbf8ea;
-  --lk-btn: #e9efd2;
-  --lk-btn-ink: #1c2419;
-  --lk-accent: #f2a93b;
-  --lk-on-board: #2f4d2c;
-  --lk-string: #b5482f;
-  --lk-line: 2px;
-  --lk-r-tile: 6px;
-  --lk-r-note: 3px;
-  --lk-r-btn: 6px;
-  --lk-r-crumb: 2px 7px 7px 2px;
-  --lk-r-mat: 8px;
-  --lk-mat-line: 2px;
-  --mc-slate: #bcd6ea; --mc-moss: #b5cf8a; --mc-tan: #f3d977; --mc-indigo: #cbc6ee; --mc-plum: #f5c8d5;
-}
-
-[data-look="chunky"] {
+:root {
   --lk-ink: #111111;
   --lk-ink-soft: #444444;
   --lk-board: #f6f5ea;
   --lk-bar: #e6ebd3;
-  --lk-bar-ink: #111111;
   --lk-brand: #2f7a32;
   --lk-paper: #ffffff;
   --lk-btn: #ffffff;
-  --lk-btn-ink: #111111;
   --lk-accent: #8fd07a;
-  --lk-on-board: #333333;
+  --lk-string: #b5482f;
   --lk-line: 3px;
   --lk-r-tile: 12px;
-  --lk-r-note: 0;
   --lk-r-btn: 9px;
-  --lk-r-crumb: 0;
-  --lk-r-mat: 0;
-  --lk-mat-line: 3px;
   --mc-slate: #7fb8e6; --mc-moss: #8fd07a; --mc-tan: #ffd23f; --mc-indigo: #a99cf0; --mc-plum: #ff9fbf;
-}
 
-:root {
   --rest: 2px;
   --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
   --font-serif: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
 }
+
+/* A section's colour. On a mat it paints the mat; on <body> it tells an inside
+   page which section it belongs to, and the crumb and doors pick it up. */
+.mc-slate { --mat-fill: var(--mc-slate); }
+.mc-moss { --mat-fill: var(--mc-moss); }
+.mc-tan { --mat-fill: var(--mc-tan); }
+.mc-indigo { --mat-fill: var(--mc-indigo); }
+.mc-plum { --mat-fill: var(--mc-plum); }
 
 * { box-sizing: border-box; }
 html, body { margin: 0; background: var(--lk-board); color: var(--lk-ink); }
@@ -79,159 +57,148 @@ a { color: inherit; }
   background: var(--lk-bar); border-bottom: 3px solid var(--lk-ink); position: sticky; top: 0; z-index: 10; }
 .brand { font-family: var(--font-mono); letter-spacing: .14em; font-weight: 700; font-size: 14px;
   color: var(--lk-brand); text-decoration: none; text-transform: uppercase; margin-right: 6px; }
-.brand:hover { color: var(--lk-accent); }
-[data-look="chunky"] .brand:hover { color: var(--lk-ink); }
+.brand:hover { color: var(--lk-ink); }
 .bar .spacer { flex: 1; }
 
 /* The trail: where you are, as crumbs joined by a length of cord. */
-.trail { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 0; }
-.trail .sep { width: 16px; border-top: 3px solid var(--lk-paper); }
-[data-look="chunky"] .trail .sep { border-top-color: var(--lk-ink); }
+.trail { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 0; }
+.trail .sep { width: 16px; border-top: 3px solid var(--lk-ink); }
 .crumb { position: relative; overflow: hidden; display: inline-block; font-family: var(--font-serif); font-weight: 700;
   font-size: 13px; text-decoration: none; background: var(--lk-paper); color: var(--lk-ink);
-  border: 2px solid var(--lk-ink); border-radius: var(--lk-r-crumb); padding: 3px 9px 3px 15px;
-  box-shadow: 2px 2px 0 var(--lk-ink); }
+  border: 2px solid var(--lk-ink); padding: 3px 9px 3px 15px; box-shadow: 2px 2px 0 var(--lk-ink); }
 .crumb::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 6px;
-  background: var(--type-color, var(--lk-accent)); border-right: 2px solid var(--lk-ink); }
-a.crumb:hover { background: var(--lk-btn); }
+  background: var(--mat-fill, var(--lk-accent)); border-right: 2px solid var(--lk-ink); }
+.crumb.home { --mat-fill: var(--lk-accent); }
+a.crumb:hover { background: var(--lk-bar); }
 
 .btn { font: 600 13px var(--font-sans); text-decoration: none; cursor: pointer; display: inline-block;
-  background: var(--lk-btn); color: var(--lk-btn-ink); border: 2px solid var(--lk-ink);
+  background: var(--lk-btn); color: var(--lk-ink); border: 2px solid var(--lk-ink);
   border-radius: var(--lk-r-btn); box-shadow: 2px 2px 0 var(--lk-ink); padding: 5px 11px; }
-.btn:hover { background: color-mix(in srgb, var(--lk-btn), #fff 30%); }
+.btn:hover { background: var(--lk-accent); }
 /* A pressed button goes down onto its own shadow. */
 .btn:active { transform: translate(2px, 2px); box-shadow: 0 0 0 var(--lk-ink); }
-.btn.on { background: var(--lk-accent); color: #1c2419; }
-.btn.small { font-size: 11px; padding: 3px 8px; }
 
-/* Two buttons sharing an edge: the fun / serious switch. */
-.pair { display: inline-flex; }
-.pair .btn:first-child { border-radius: var(--lk-r-btn) 0 0 var(--lk-r-btn); border-right-width: 1px; }
-.pair .btn:last-child { border-radius: 0 var(--lk-r-btn) var(--lk-r-btn) 0; border-left-width: 1px; }
+/* The switch says where it will take you, not where you are. */
+.when-serious { display: none; }
+[data-style="serious"] .when-fun { display: none; }
+[data-style="serious"] .when-serious { display: inline; }
 
 /* ---- the home board -----------------------------------------------------
 
    Twelve columns, each piece nudged off the grid so it reads as placed by
-   hand rather than tabulated. On a phone the pieces stack in reading order. */
+   hand rather than tabulated. A section is placed by its folder name
+   (`p-research` is content/research/); one with no rule of its own takes
+   half the board. On a phone the pieces stack in reading order. */
 
 .board { max-width: 1180px; margin: 0 auto; padding: 26px 20px 10px;
   display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 30px 28px; align-items: start; }
-.p-note     { grid-column: 1 / span 5; margin-top: 34px; }
-.p-photo    { grid-column: 6 / span 2; margin-top: 12px; }
-.p-research { grid-column: 8 / span 5; margin-top: 58px; }
-.p-teaching { grid-column: 1 / span 4; margin-top: 30px; }
-.p-projects { grid-column: 5 / span 5; margin-top: 54px; }
-.p-links    { grid-column: 10 / span 3; margin-top: 18px; }
-.p-blog     { grid-column: 2 / span 9; margin-top: 30px; }
+.board > .mat { grid-column: span 6; margin-top: 30px; }
+.board > .p-note      { grid-column: 1 / span 5; margin-top: 34px; }
+.board > .p-photo     { grid-column: 6 / span 2; margin-top: 12px; }
+.board > .p-research  { grid-column: 8 / span 5; margin-top: 58px; }
+.board > .p-teaching  { grid-column: 1 / span 4; margin-top: 30px; }
+.board > .p-projects  { grid-column: 5 / span 5; margin-top: 54px; }
+.board > .p-elsewhere { grid-column: 10 / span 3; margin-top: 18px; }
+.board > .p-blog      { grid-column: 2 / span 9; margin-top: 30px; }
 
 /* ---- an inside page: one column of paper -------------------------------- */
 
 .page { max-width: 760px; margin: 0 auto; padding: 34px 16px 10px; }
-.page > * + * { margin-top: 26px; }
+.page > * + * { margin-top: 30px; }
 
-/* ---- mats: a coloured surface with a folder tab for its name ------------ */
+/* ---- mats: a coloured surface with a tab for its name ------------------- */
 
-.mc-slate { --mat-fill: var(--mc-slate); }
-.mc-moss { --mat-fill: var(--mc-moss); }
-.mc-tan { --mat-fill: var(--mc-tan); }
-.mc-indigo { --mat-fill: var(--mc-indigo); }
-.mc-plum { --mat-fill: var(--mc-plum); }
-
-.mat { position: relative; padding: 20px; color: #1c2419;
-  background-color: var(--mat-fill, var(--mc-slate));
-  --pat: color-mix(in srgb, var(--mat-fill, var(--mc-slate)) 62%, var(--lk-ink));
-  border: var(--lk-mat-line) solid var(--lk-ink); border-radius: var(--lk-r-mat);
-  border-top-left-radius: 0;
+.mat { position: relative; padding: 20px; color: var(--lk-ink);
+  background: var(--mat-fill, var(--mc-slate));
+  border: var(--lk-line) solid var(--lk-ink);
   box-shadow: var(--rest) var(--rest) 0 var(--lk-ink); }
-.page > .mat { margin-top: 52px; }
-.mat > .tab { position: absolute; left: calc(-1 * var(--lk-mat-line)); bottom: 100%; margin: 0;
-  padding: 3px 12px 2px; background: var(--mat-fill, var(--mc-slate)); color: #1c2419;
-  border: var(--lk-mat-line) solid var(--lk-ink); border-bottom: none; border-radius: 6px 6px 0 0;
+.mat > .tab { position: absolute; left: calc(-1 * var(--lk-line)); bottom: 100%; margin: 0;
+  padding: 3px 12px 2px; background: var(--lk-ink); color: #fff;
+  border: var(--lk-line) solid var(--lk-ink); border-bottom: none;
   font: 700 11.5px var(--font-sans); letter-spacing: .08em; text-transform: uppercase; text-decoration: none;
   white-space: nowrap; }
-a.tab:hover { background: var(--lk-accent); }
-[data-look="chunky"] .mat > .tab { background: var(--lk-ink); color: #fff; border-radius: 0; }
-[data-look="chunky"] a.tab:hover { background: var(--lk-accent); color: var(--lk-ink); }
+a.tab:hover { background: var(--lk-accent); color: var(--lk-ink); }
 
-/* The materials. Chunky draws only the colour, as Bold mats do in the app. */
-.tex-cork { background-image: radial-gradient(var(--pat) 1.4px, transparent 1.6px); background-size: 8px 8px; }
-.tex-grid { background-image: repeating-linear-gradient(45deg, var(--pat) 0 1.5px, transparent 1.5px 9px),
-  repeating-linear-gradient(-45deg, var(--pat) 0 1.5px, transparent 1.5px 9px); }
-.tex-paper { background-image: repeating-linear-gradient(0deg, var(--pat) 0 2px, transparent 2px 7px); }
-[data-look="chunky"] :is(.tex-cork, .tex-grid, .tex-paper) { background-image: none; }
-
-/* ---- doors: a name and a band of type colour, nothing else -------------- */
+/* ---- doors: a name and a band of its section's colour ------------------- */
 
 .doors { display: flex; flex-wrap: wrap; gap: 16px; }
-.door { position: relative; display: block; width: 150px; min-height: 76px; padding: 20px 10px 8px;
-  text-decoration: none; background: var(--lk-paper); color: #1c2419;
+.door { position: relative; display: block; width: 150px; min-height: 76px; padding: 22px 10px 8px;
+  text-decoration: none; background: var(--lk-paper); color: var(--lk-ink);
   border: var(--lk-line) solid var(--lk-ink); border-radius: var(--lk-r-tile);
   box-shadow: var(--rest) var(--rest) 0 var(--lk-ink);
   transition: box-shadow 140ms ease-out, transform 140ms ease-out; }
 .door::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 12px;
-  background: var(--type-color, var(--lk-accent)); border-bottom: var(--lk-line) solid var(--lk-ink);
+  background: var(--mat-fill, var(--lk-accent)); border-bottom: var(--lk-line) solid var(--lk-ink);
   border-radius: calc(var(--lk-r-tile) - var(--lk-line)) calc(var(--lk-r-tile) - var(--lk-line)) 0 0; }
 .door .name { display: block; font-family: var(--font-serif); font-weight: 700; font-size: 15px; line-height: 1.25; }
-.door .degree { display: block; font-family: var(--font-mono); font-size: 10px; color: #4a5642; margin-top: 6px; }
+.door .degree { display: block; font-family: var(--font-mono); font-size: 10px; color: var(--lk-ink-soft); margin-top: 6px; }
 /* Picked up: it rises off the surface and its shadow grows by the same amount. */
 .door:hover, .door:focus-visible { transform: translate(-4px, -4px); box-shadow: 6px 6px 0 var(--lk-ink); outline: none; }
 .door:focus-visible { box-shadow: 0 0 0 3px var(--lk-accent), 9px 9px 0 var(--lk-ink); }
 .door:active { transform: translate(2px, 2px); box-shadow: 0 0 0 var(--lk-ink); }
 
-.t-research { --type-color: #7fb8e6; }
-.t-teaching { --type-color: #ffd23f; }
-.t-blog { --type-color: #ff9fbf; }
-.t-projects { --type-color: #8fd07a; }
-.t-links { --type-color: #a99cf0; }
-
 /* ---- notes: paper you read ---------------------------------------------- */
 
-.note { background: var(--lk-paper); color: #1c2419; border: var(--lk-line) solid var(--lk-ink);
-  border-radius: var(--lk-r-note); box-shadow: var(--rest) var(--rest) 0 var(--lk-ink);
+.note { background: var(--lk-paper); color: var(--lk-ink); border: var(--lk-line) solid var(--lk-ink);
+  box-shadow: var(--rest) var(--rest) 0 var(--lk-ink);
   padding: 18px 20px; font-family: var(--font-serif); position: relative; }
 .note.long { padding: 26px 30px; font-size: 17px; line-height: 1.6; }
-.note h1 { font-size: 34px; line-height: 1.1; margin: 0 0 6px; }
-.note h2 { font-size: 21px; margin: 1.2em 0 .4em; }
-.note p { margin: 0 0 .8em; }
 .note > :first-child { margin-top: 0; }
 .note > :last-child { margin-bottom: 0; }
-.note a:not(.btn) { color: var(--lk-string); }
-.pin { position: absolute; top: -6px; left: 50%; margin-left: -6px; width: 12px; height: 12px;
+.pin { position: absolute; top: -7px; left: 50%; margin-left: -7px; width: 14px; height: 14px;
   border-radius: 50%; background: var(--lk-accent); border: 2px solid var(--lk-ink); }
-.kicker { font: 700 11px var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: #4a5642; }
+.kicker { font: 700 11px var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--lk-ink-soft); }
 
-/* Rows in a note: a list of dated things. */
-.rows { list-style: none; margin: 0; padding: 0; }
-.rows li { display: flex; gap: 14px; align-items: baseline; padding: 9px 0; border-top: 2px dotted var(--lk-ink); }
+/* Everything Markdown can produce, inside a note. */
+.note h1 { font-size: 34px; line-height: 1.1; margin: 0 0 .35em; }
+.note h2 { font-size: 23px; line-height: 1.2; margin: 1.5em 0 .4em; }
+.note h3 { font-size: 18px; margin: 1.3em 0 .3em; }
+.note p, .note ul, .note ol, .note blockquote, .note pre, .note table, .note figure { margin: 0 0 .9em; }
+.note ul, .note ol { padding-left: 1.3em; }
+.note li { margin-bottom: .25em; }
+.note a:not(.btn):not(.door) { color: var(--lk-string); text-underline-offset: 2px; }
+.note a:not(.btn):not(.door):hover { background: var(--lk-accent); color: var(--lk-ink); }
+.note img { max-width: 100%; height: auto; border: var(--lk-line) solid var(--lk-ink); }
+.note blockquote { margin-left: 0; padding: 2px 0 2px 16px; border-left: 6px solid var(--lk-accent); }
+.note code { font: .85em var(--font-mono); background: var(--lk-bar); padding: 1px 4px; }
+.note pre { background: var(--lk-bar); border: 2px solid var(--lk-ink); padding: 12px 14px; overflow-x: auto;
+  line-height: 1.45; }
+.note pre code { background: none; padding: 0; }
+.note hr { border: none; border-top: var(--lk-line) dotted var(--lk-ink); margin: 1.6em 0; }
+.note table { border-collapse: collapse; font: 14px var(--font-sans); display: block; overflow-x: auto; }
+.note th, .note td { border: 2px solid var(--lk-ink); padding: 5px 10px; text-align: left; }
+.note th { background: var(--lk-bar); }
+.note .footnotes { font-size: .85em; }
+
+/* Rows: a list of dated things, newest first. */
+.rows { list-style: none; margin: 0; padding: 0; font-family: var(--font-serif); }
+.rows li { display: flex; gap: 14px; align-items: baseline; padding: 10px 0; border-top: 2px dotted var(--lk-ink); }
 .rows li:first-child { border-top: none; padding-top: 0; }
-.rows .when { font: 11px var(--font-mono); color: #4a5642; flex: none; width: 78px; }
-.rows .what { flex: 1; }
+.rows li:last-child { padding-bottom: 0; }
+.rows .when { font: 11px var(--font-mono); color: var(--lk-ink-soft); flex: none; width: 130px; }
+.rows .what { flex: 1; font-weight: 700; font-size: 17px; }
 
 .photo { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; background: var(--mc-slate);
-  border: var(--lk-line) solid var(--lk-ink); border-radius: var(--lk-r-note);
-  box-shadow: var(--rest) var(--rest) 0 var(--lk-ink); }
+  border: var(--lk-line) solid var(--lk-ink); box-shadow: var(--rest) var(--rest) 0 var(--lk-ink); }
 
-.foot { padding: 28px 16px 40px; text-align: center; font: 11px var(--font-mono); color: var(--lk-on-board); }
-.foot .btn { margin: 0 2px; }
+.foot { padding: 28px 16px 40px; }
 
-/* ---- NOT PART OF THE DESIGN: where Mal's words go ----------------------- */
+/* ---- NOT PART OF THE DESIGN: put there by build.py where a page is empty -- */
 
-.slot { display: block; border: 2px dashed #8b9580; border-radius: 3px; padding: 8px 10px; margin: 0 0 .8em;
-  font: 12px/1.45 var(--font-mono); color: #5d6a55; }
-.rows .slot { margin: 0; }
-.door.empty { border-style: dashed; }
-.door.empty .name { font: 12px/1.4 var(--font-mono); color: #5d6a55; }
+.slot { display: block; border: 2px dashed #8a8a80; padding: 8px 10px; margin: 0 0 .9em;
+  font: 12px/1.45 var(--font-mono); color: #5a5a52; background: none; }
 
 /* ---- phones ------------------------------------------------------------- */
 
 @media (max-width: 860px) {
   .board { grid-template-columns: 1fr; gap: 22px; padding: 18px 16px 6px; }
-  .board > * { grid-column: 1; margin-top: 0; }
-  .board > .mat { margin-top: 26px; }
-  .p-photo { max-width: 160px; }
+  .board > * { grid-column: 1 !important; margin-top: 0 !important; }
+  .board > .mat { margin-top: 26px !important; }
+  .board > .p-photo { max-width: 160px; }
   .door { width: calc(50% - 8px); }
   .note.long { padding: 20px 18px; }
-  .rows li { flex-direction: column; gap: 4px; }
+  .rows li { flex-direction: column; gap: 2px; }
+  .rows .when { width: auto; }
 }
 
 /* ============================================================================
@@ -242,7 +209,7 @@ a.tab:hover { background: var(--lk-accent); }
    fills, nothing lifts. The home board becomes a list of its own sections.
 
    Every rule here starts with [data-style="serious"], which outweighs the
-   plain rules above, and sits after the looks so it wins over them too.
+   plain rules above.
    ========================================================================== */
 
 [data-style="serious"] {
@@ -250,7 +217,7 @@ a.tab:hover { background: var(--lk-accent); }
   --lk-ink-soft: #5c5c57;
   --lk-board: #fbfaf6;
   --lk-paper: #fbfaf6;
-  --lk-on-board: #5c5c57;
+  --lk-bar: #f0eee6;
   --lk-string: #2f5d3a;
   --lk-accent: #2f5d3a;
   --rule: #cfcdc4;
@@ -262,7 +229,7 @@ a.tab:hover { background: var(--lk-accent); }
 [data-style="serious"] .brand:hover { color: var(--lk-string); }
 [data-style="serious"] .trail .sep { width: auto; border: none; }
 [data-style="serious"] .trail .sep::before { content: '/'; color: var(--lk-ink-soft); padding: 0 8px; font-size: 13px; }
-[data-style="serious"] .crumb { background: none; border: none; box-shadow: none; padding: 0; border-radius: 0;
+[data-style="serious"] .crumb { background: none; border: none; box-shadow: none; padding: 0;
   font-weight: 400; font-size: 14px; color: var(--lk-ink-soft); }
 [data-style="serious"] .crumb::before { display: none; }
 [data-style="serious"] a.crumb { text-decoration: underline; }
@@ -271,45 +238,41 @@ a.tab:hover { background: var(--lk-accent); }
   box-shadow: none; font-weight: 500; }
 [data-style="serious"] .btn:hover { border-color: var(--lk-ink); background: none; }
 [data-style="serious"] .btn:active { transform: none; }
-[data-style="serious"] .btn.on { background: var(--lk-ink); color: var(--lk-board); border-color: var(--lk-ink); }
-[data-style="serious"] .pair .btn:first-child { border-radius: 3px 0 0 3px; border-right-width: 0; }
-[data-style="serious"] .pair .btn:last-child { border-radius: 0 3px 3px 0; border-left-width: 1px; }
 
 [data-style="serious"] .board { display: block; max-width: 680px; padding: 40px 16px 10px; }
-[data-style="serious"] .board > * { margin-top: 0; }
+[data-style="serious"] .board > * { margin-top: 0 !important; }
 [data-style="serious"] .page { max-width: 680px; padding-top: 40px; }
 
-[data-style="serious"] .note { background: none; border: none; box-shadow: none; padding: 0; border-radius: 0;
-  color: var(--lk-ink); }
+[data-style="serious"] .note { background: none; border: none; box-shadow: none; padding: 0; }
 [data-style="serious"] .pin { display: none; }
-[data-style="serious"] .kicker { color: var(--lk-ink-soft); font-weight: 400; }
-[data-style="serious"] .photo { max-width: 130px; margin-top: 22px; border: 1px solid var(--rule); border-radius: 2px;
-  box-shadow: none; background: #eceae2; }
+[data-style="serious"] .kicker { font-weight: 400; }
+[data-style="serious"] .board > .photo { max-width: 130px; margin-top: 22px !important; }
+[data-style="serious"] .photo { border: 1px solid var(--rule); border-radius: 2px; box-shadow: none; }
+[data-style="serious"] .note a:not(.btn):not(.door):hover { background: none; color: var(--lk-ink); }
+[data-style="serious"] .note img, [data-style="serious"] .note pre { border: 1px solid var(--rule); }
+[data-style="serious"] .note th, [data-style="serious"] .note td { border: 1px solid var(--rule); }
+[data-style="serious"] .note blockquote { border-left: 2px solid var(--rule); }
+[data-style="serious"] .note hr { border-top: 1px solid var(--rule); }
 
-[data-style="serious"] .mat, [data-style="serious"] .page > .mat { background: none; border: none;
-  border-top: 1px solid var(--rule); border-radius: 0; box-shadow: none; padding: 16px 0 0; margin-top: 34px;
-  color: var(--lk-ink); }
+[data-style="serious"] .mat, [data-style="serious"] .board > .mat { background: none; border: none;
+  border-top: 1px solid var(--rule); box-shadow: none; padding: 16px 0 0; margin-top: 34px !important; }
 [data-style="serious"] .mat > .tab { position: static; display: block; background: none; border: none; padding: 0;
-  margin: 0 0 8px; color: var(--lk-ink-soft); border-radius: 0; font: 700 12px var(--font-sans); letter-spacing: .1em; }
+  margin: 0 0 8px; color: var(--lk-ink-soft); font: 700 12px var(--font-sans); letter-spacing: .1em; }
 [data-style="serious"] a.tab:hover { background: none; color: var(--lk-string); }
 
 [data-style="serious"] .doors { display: block; }
 [data-style="serious"] .door { width: auto; min-height: 0; padding: 5px 0; background: none; border: none;
-  border-radius: 0; box-shadow: none; transition: none; color: var(--lk-ink);
+  border-radius: 0; box-shadow: none; transition: none;
   display: flex; gap: 12px; align-items: baseline; }
 [data-style="serious"] .door::before { display: none; }
 [data-style="serious"] .door .name { font-weight: 400; font-size: 17px; text-decoration: underline;
   text-decoration-color: var(--rule); text-underline-offset: 3px; }
-[data-style="serious"] .door .degree { margin: 0; color: var(--lk-ink-soft); font-size: 11px; }
+[data-style="serious"] .door .degree { margin: 0; font-size: 11px; }
 [data-style="serious"] .door:hover, [data-style="serious"] .door:focus-visible, [data-style="serious"] .door:active {
   transform: none; box-shadow: none; }
 [data-style="serious"] .door:hover .name { color: var(--lk-string); text-decoration-color: var(--lk-string); }
 [data-style="serious"] .door:focus-visible { outline: 2px solid var(--lk-string); outline-offset: 2px; }
-[data-style="serious"] .door.empty .name { text-decoration: none; }
 
 [data-style="serious"] .rows li { border-top: 1px solid var(--rule); }
-[data-style="serious"] .rows .when, [data-style="serious"] .slot { color: var(--lk-ink-soft); }
+[data-style="serious"] .rows .what { font-weight: 400; }
 [data-style="serious"] .slot { border: 1px dashed #b5b3a9; }
-
-/* Only while Mal is choosing the fun look: not for visitors. */
-[data-style="serious"] .lookPick { display: none; }

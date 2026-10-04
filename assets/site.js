@@ -1,4 +1,4 @@
-/* The visitor's choice of style: fun or serious.
+/* The visitor's choice of style: fun (the default) or serious.
 
    Loaded in <head> without `defer`, on purpose: the attribute has to be on
    <html> before the page is drawn, or a visitor who chose serious sees the
@@ -6,40 +6,23 @@
 
    The choice is kept in the browser's own storage, so it follows the visitor
    from page to page. A browser that refuses storage (private windows do)
-   just gets the default each time. */
+   just gets fun each time.
+
+   The button's two labels are both in the page; the stylesheet shows the one
+   that fits (`.when-fun`, `.when-serious`), so there is nothing to rewrite
+   here and no flash of the wrong word. */
 (function () {
   var root = document.documentElement;
-  var DEFAULTS = { style: 'fun', look: 'garden' };
+  var KEY = 'site-style';
 
-  function read(key) {
-    try { return localStorage.getItem('site-' + key); } catch (e) { return null; }
-  }
-  function write(key, value) {
-    try { localStorage.setItem('site-' + key, value); } catch (e) { /* no storage: fine */ }
-  }
-  function apply(key, value) {
-    root.dataset[key] = value;
-    document.querySelectorAll('[data-set-' + key + ']').forEach(function (b) {
-      var on = b.getAttribute('data-set-' + key) === value;
-      b.classList.toggle('on', on);
-      b.setAttribute('aria-pressed', on ? 'true' : 'false');
-    });
-  }
+  var saved = null;
+  try { saved = localStorage.getItem(KEY); } catch (e) { /* no storage: fine */ }
+  root.dataset.style = saved === 'serious' ? 'serious' : 'fun';
 
-  Object.keys(DEFAULTS).forEach(function (key) {
-    root.dataset[key] = read(key) || DEFAULTS[key];
-  });
-
-  document.addEventListener('DOMContentLoaded', function () {
-    Object.keys(DEFAULTS).forEach(function (key) {
-      apply(key, root.dataset[key]);
-      document.querySelectorAll('[data-set-' + key + ']').forEach(function (b) {
-        b.addEventListener('click', function () {
-          var value = b.getAttribute('data-set-' + key);
-          apply(key, value);
-          write(key, value);
-        });
-      });
-    });
+  document.addEventListener('click', function (ev) {
+    if (!ev.target.closest('[data-toggle-style]')) return;
+    var next = root.dataset.style === 'serious' ? 'fun' : 'serious';
+    root.dataset.style = next;
+    try { localStorage.setItem(KEY, next); } catch (e) { /* no storage: fine */ }
   });
 })();

@@ -1,7 +1,8 @@
 ---
 title: Malcolm Rosenthal
-kicker: Etc. Spider time!
-subtitle: Frontiers of Science Fellow and Faculty Lecturer in the discipline of Ecology, Evolution, and Environmental Biology
+subtitle: Frontiers of Science Fellow | E3B Lecturer | Columbia University
+born: 1986-10-20T16:06-04:00
+age-figures: 6
 photo: img/avatar.jpg
 ---
 

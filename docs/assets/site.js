@@ -27,16 +27,16 @@
   });
 })();
 
-/* {{age-hours}}: how old Mal is, in hours, to four significant figures.
+/* {{age-hours}}: how old Mal is, in hours, to `data-figures` significant figures.
    The build writes in the value as of build day; this replaces it with the
-   value as of now. `born` is read as local time in the visitor's browser,
-   which at this precision (a step is about four days) makes no difference. */
+   value as of now. `born` carries its own offset from UTC, so the answer is
+   the same in every time zone; without one it would be read as local time. */
 document.addEventListener('DOMContentLoaded', function () {
   document.querySelectorAll('.age[data-born]').forEach(function (el) {
     var born = new Date(el.dataset.born.length === 10 ? el.dataset.born + 'T00:00' : el.dataset.born);
     var hours = (Date.now() - born.getTime()) / 3.6e6;
     if (!(hours > 0)) return;
-    var parts = hours.toExponential(3).split('e');
+    var parts = hours.toExponential((parseInt(el.dataset.figures, 10) || 4) - 1).split('e');
     el.innerHTML = parts[0] + ' &times; 10<sup>' + parseInt(parts[1], 10) + '</sup>';
   });
 });

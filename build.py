@@ -40,14 +40,16 @@ Settings a SECTION's index.md understands, as well as title and order:
     show    how many doors the home board shows before the "more" door
     more    the name of that "more" door, which leads to the section page
 
-Settings home.md understands: title, kicker, subtitle (the line under the name),
+Settings home.md understands: title, kicker, subtitle (the line under the name;
+a | starts a new line),
 photo (a path inside assets/),
-and born: 1990-01-31 (or 1990-01-31T14:30), which any page can use:
+age-figures (default 4), and born: 1990-01-31, 1990-01-31T14:30, or with the
+clock's offset from UTC, 1990-01-31T14:30-05:00. Any page can then use:
 
     I am {{age-hours}} hours old.
 
 The number is worked out in the visitor's browser on every visit, to four
-significant figures in scientific notation. The build also writes in the value
+significant figures (age-figures) in scientific notation. The build also writes in the value
 as of build day, for the rare browser that runs no JavaScript.
 """
 
@@ -114,6 +116,7 @@ def nice_date(d):
 
 
 BORN = ""  # set from content/home.md when the build starts
+FIGURES = 4
 
 
 def age_hours(born):
@@ -124,9 +127,10 @@ def age_hours(born):
         start = datetime.fromisoformat(born)
     except ValueError:
         sys.exit(f"content/home.md: born must look like 1990-01-31 or 1990-01-31T14:30, not '{born}'")
-    hours = (datetime.now() - start).total_seconds() / 3600
-    mantissa, exponent = f"{hours:.3e}".split("e")
-    return (f'<span class="age" data-born="{esc(born, quote=True)}" data-unit="hours">'
+    now = datetime.now(start.tzinfo) if start.tzinfo else datetime.now()
+    hours = (now - start).total_seconds() / 3600
+    mantissa, exponent = f"{hours:.{FIGURES - 1}e}".split("e")
+    return (f'<span class="age" data-born="{esc(born, quote=True)}" data-figures="{FIGURES}">'
             f'{mantissa} &times; 10<sup>{int(exponent)}</sup></span>')
 
 
@@ -224,9 +228,10 @@ def write(path, text):
 
 def build():
     template = (ROOT / "templates" / "base.html").read_text(encoding="utf-8")
-    global BORN
+    global BORN, FIGURES
     home_meta, home_body = read(CONTENT / "home.md")
     BORN = home_meta.get("born", "")
+    FIGURES = number(home_meta.get("age-figures"), 4)
     site_name = home_meta.get("title", "Home")
     sections = load()
 
@@ -243,7 +248,8 @@ def build():
         note.append(f'<div class="kicker">{esc(kicker)}</div>')
     note.append(f"<h1>{esc(site_name)}</h1>")
     if home_meta.get("subtitle"):
-        note.append(f'<p class="subtitle">{esc(home_meta["subtitle"])}</p>')
+        lines = [esc(x.strip()) for x in home_meta["subtitle"].split("|")]
+        note.append(f'<p class="subtitle">{"<br>".join(lines)}</p>')
     note.append(to_html(home_body) if home_body else slot("Nothing written yet. Write in content/home.md"))
     note.append("</section>")
     main = ['<main class="board">', "".join(note)]

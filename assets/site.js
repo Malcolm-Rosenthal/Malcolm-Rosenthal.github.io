@@ -40,3 +40,13 @@ document.addEventListener('DOMContentLoaded', function () {
     el.innerHTML = parts[0] + ' &times; 10<sup>' + parseInt(parts[1], 10) + '</sup>';
   });
 });
+
+/* Animations play on their own, silently and on a loop, like the GIFs they
+   were. A visitor who has asked their system for less motion gets them
+   paused, with controls to play them if they want to. */
+document.addEventListener('DOMContentLoaded', function () {
+  if (!window.matchMedia || !window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  document.querySelectorAll('video[autoplay]').forEach(function (v) {
+    v.removeAttribute('autoplay'); v.pause(); v.controls = true;
+  });
+});

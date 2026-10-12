@@ -16,7 +16,7 @@ I have been teaching university courses for more than 15 years. I am currently t
 
 Frontiers of Science is part of Columbia College’s core curriculum; everyone takes FroSci as a freshman. Serving more than 700 students each semester is a massive undertaking, and we have more than 15 full-time faculty who collaborate to create and run the course. Frontiers is the ultimate teaching challenge, covering everything from special relativity, to the biochemistry of cancer, to the neuroscience of memory formation.
 
-{{door: frontiers-of-science}}
+{{door: physics-1}}
 
 ## Animal Behavior through Fieldwork
 

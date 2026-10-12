@@ -244,6 +244,32 @@ a.tab:hover { background: var(--lk-accent); color: var(--lk-ink); }
 [data-style="serious"] .file:hover .fileName { color: var(--lk-string); }
 [data-style="serious"] .cv-entry:target { background: #f0eee6; outline-color: #f0eee6; }
 
+/* Pictures, animations and equations inside a long page. Animations sit to
+   the right of the paragraph they illustrate, as they did in the Doc; on a
+   phone they take the full width. */
+.note.long::after { content: ""; display: block; clear: both; }
+.note h2, .note h3 { clear: both; }
+.note .anim { float: right; width: 46%; margin: 4px 0 14px 24px; }
+.note .anim.tall { width: 22%; }
+.note .anim video, .note .pic img { display: block; width: 100%; height: auto; background: #fff;
+  border: var(--lk-line) solid var(--lk-ink); box-shadow: var(--rest) var(--rest) 0 var(--lk-ink); }
+.note .pic { max-width: 380px; margin: 0 auto 1.4em; }
+.note .pic img { margin: 0; }
+.note .cap { font-style: italic; font-size: 14.5px; line-height: 1.4; text-align: center; color: var(--lk-ink-soft); margin: 8px 0 0; }
+.note .eq { overflow-x: auto; margin: 0 0 1.1em; padding: 4px 0; font-size: 1.12em; }
+.note .always { text-align: center; font-family: var(--font-sans); font-size: 18px; margin: 1.2em 0; }
+.always .w3 { font-weight: 300; } .always .w6 { font-weight: 600; } .always .w9 { font-weight: 900; }
+.note .footnotes { clear: both; font-size: 14.5px; line-height: 1.5; margin-top: 2.4em; padding-top: 10px;
+  border-top: var(--lk-line) dotted var(--lk-ink); }
+.note .footnotes hr { display: none; }
+.note sup.footnote-ref a, .note .footnoteBackLink { text-decoration: none; }
+@media (max-width: 700px) {
+  .note .anim { float: none; width: 100%; margin: 0 0 1.2em; }
+  .note .anim.tall { width: 45%; margin: 0 auto 1.2em; }
+}
+[data-style="serious"] .note .anim video, [data-style="serious"] .note .pic img { border: 1px solid var(--rule); box-shadow: none; }
+[data-style="serious"] .note .footnotes { border-top: 1px solid var(--rule); }
+
 /* Rows: a list of dated things, newest first. */
 .rows { list-style: none; margin: 0; padding: 0; font-family: var(--font-serif); }
 .rows li { display: flex; gap: 14px; align-items: baseline; padding: 10px 0; border-top: 2px dotted var(--lk-ink); }

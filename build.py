@@ -34,6 +34,9 @@ Settings a PAGE understands:
     link    a web address. The door goes straight there and no page is made.
     draft   yes: skip this file entirely
     layout  cv: a CV, typed line by line (see the note at the top of cv.md)
+    parent  the slug of another page in this folder. The page then has no door
+            on the mat; its door goes in the parent's text, and the trail runs
+            through the parent.
     pdf     a PDF in the same folder, offered as "Download PDF" at the top.
             Left out quietly while the file is not there yet.
 
@@ -42,6 +45,12 @@ Settings a SECTION's index.md understands, as well as title and order:
     page    no: the section has no page of its own, only a mat (Elsewhere)
     show    how many doors the home board shows before the "more" door
     more    the name of that "more" door, which leads to the section page
+
+In any text:
+    {{door: slug}}      on a line of its own: a door to that page in this
+                        folder. Several such lines together sit side by side.
+    {{todo: a note}}    a dashed box saying what still goes here.
+Titles may use *italics* (species names).
 
 Settings home.md understands: title, kicker, subtitle (the line under the name;
 a | starts a new line),
@@ -174,6 +183,29 @@ def render_cv(text):
     return "\n".join(out)
 
 
+def plain(title):
+    """A title as plain text, for the browser tab."""
+    return esc(title.replace("*", ""))
+
+
+def with_doors(body, section, root):
+    """Turn {{door: slug}} lines into doors and {{todo: ...}} into notes."""
+    by_slug = {p["slug"]: p for p in section["pages"]}
+
+    def one(slug):
+        slug = slug.strip()
+        if slug not in by_slug:
+            sys.exit(f'{{{{door: {slug}}}}}: no page called {slug}.md in content/{section["slug"]}/')
+        return door(by_slug[slug], section, root)
+
+    def row(m):
+        return '<div class="doors">' + "".join(one(x) for x in re.findall(r"\{\{door:([^}]*)\}\}", m.group(0))) + "</div>"
+
+    body = re.sub(r"<p>\s*(?:\{\{door:[^}]*\}\}\s*)+</p>", row, body)
+    body = re.sub(r"\{\{door:([^}]*)\}\}", lambda m: one(m.group(1)), body)
+    return re.sub(r"\{\{todo:\s*(.*?)\}\}", r'<span class="slot">\1</span>', body)
+
+
 def slot(message):
     """What an empty page shows instead of nothing, so it says how to fill it."""
     return f'<span class="slot">{esc(message)}</span>'
@@ -204,8 +236,13 @@ def load():
                 "link": m.get("link", ""),
                 "layout": m.get("layout", ""),
                 "pdf": m.get("pdf", ""),
+                "parent": m.get("parent", ""),
                 "body": b,
             })
+        slugs = {p["slug"] for p in pages}
+        for p in pages:
+            if p["parent"] and p["parent"] not in slugs:
+                sys.exit(f'{p["src"]}: parent "{p["parent"]}" is not a page in content/{folder.name}/')
         dated = any(p["date"] for p in pages)
         if dated:
             pages.sort(key=lambda p: p["date"] or date.min, reverse=True)
@@ -223,6 +260,7 @@ def load():
             "dated": dated,
             "body": body,
             "pages": pages,
+            "top": [p for p in pages if not p["parent"]],
         })
     sections.sort(key=lambda s: (s["order"], s["title"].lower()))
     return sections
@@ -238,14 +276,15 @@ def door(page, section, root):
         href = f'{root}{section["slug"]}/{page["slug"]}.html'
     small = page["note"] or (nice_date(page["date"]) if page["date"] else "")
     degree = f'<span class="degree">{esc(small)}</span>' if small else ""
-    return f'<a class="door" href="{href}"><span class="name">{esc(page["title"])}</span>{degree}</a>'
+    return f'<a class="door" href="{href}"><span class="name">{inline(page["title"])}</span>{degree}</a>'
 
 
 def crumb(label, href=None, home=False):
     cls = "crumb home" if home else "crumb"
+    label = esc(label) if home else inline(label)
     if href:
-        return f'<a class="{cls}" href="{href}">{esc(label)}</a>'
-    return f'<span class="{cls}">{esc(label)}</span>'
+        return f'<a class="{cls}" href="{href}">{label}</a>'
+    return f'<span class="{cls}">{label}</span>'
 
 
 SEP = '<span class="sep"></span>'
@@ -297,9 +336,9 @@ def build():
         href = f'{s["slug"]}/index.html'
         tab = (f'<a class="tab" href="{href}">{esc(s["title"])}</a>' if s["has_page"]
                else f'<span class="tab">{esc(s["title"])}</span>')
-        shown = s["pages"][: s["show"]] if s["show"] else s["pages"]
+        shown = s["top"][: s["show"]] if s["show"] else s["top"]
         doors = [door(p, s, "") for p in shown]
-        if s["has_page"] and s["more"] and len(s["pages"]) > len(shown):
+        if s["has_page"] and s["more"] and len(s["top"]) > len(shown):
             doors.append(f'<a class="door" href="{href}"><span class="name">{esc(s["more"])}</span></a>')
         inside = (f'<div class="doors">{"".join(doors)}</div>' if doors
                   else slot(f'Nothing here yet. Add a file to content/{s["slug"]}/'))
@@ -319,16 +358,16 @@ def build():
                 shutil.copy2(f, target)
 
         if s["has_page"]:
-            body = to_html(s["body"]) if s["body"] else slot(f'Nothing written yet. Write in {s["src"]}')
+            body = with_doors(to_html(s["body"]), s, "../") if s["body"] else slot(f'Nothing written yet. Write in {s["src"]}')
             main = [f'<main class="page"><article class="note long"><h1>{esc(s["title"])}</h1>{body}</article>']
-            if s["pages"] and s["dated"]:
+            if s["top"] and s["dated"]:
                 rows = "".join(
                     f'<li><span class="when">{esc(nice_date(p["date"])) if p["date"] else ""}</span>'
                     f'<a class="what" href="{esc(p["link"], quote=True) if p["link"] else p["slug"] + ".html"}">'
-                    f'{esc(p["title"])}</a></li>' for p in s["pages"])
+                    f'{inline(p["title"])}</a></li>' for p in s["top"])
                 main.append(f'<section class="mat"><div class="note"><ul class="rows">{rows}</ul></div></section>')
-            elif s["pages"]:
-                doors = "".join(door(p, s, "../") for p in s["pages"])
+            elif s["top"]:
+                doors = "".join(door(p, s, "../") for p in s["top"])
                 main.append(f'<section class="mat"><div class="doors">{doors}</div></section>')
             main.append("</main>")
             trail = crumb("Home", "../index.html", home=True) + SEP + crumb(s["title"])
@@ -346,19 +385,26 @@ def build():
             elif p["layout"] == "cv":
                 body = render_cv(p["body"])
             else:
-                body = to_html(p["body"])
+                body = with_doors(to_html(p["body"]), s, "../")
             kind = " cv" if p["layout"] == "cv" else ""
             if p["pdf"] and (CONTENT / s["slug"] / p["pdf"]).exists():
                 href = esc(p["pdf"], quote=True)
                 body = f'<p class="download"><a class="btn" href="{href}">Download PDF</a></p>' + body
-            main = (f'<main class="page"><article class="note long{kind}">{when}<h1>{esc(p["title"])}</h1>'
+            main = (f'<main class="page"><article class="note long{kind}">{when}<h1>{inline(p["title"])}</h1>'
                     f'{body}</article></main>')
             trail = crumb("Home", "../index.html", home=True) + SEP
             if s["has_page"]:
                 trail += crumb(s["title"], "index.html") + SEP
+            chain, up = [], p["parent"]
+            by_slug = {q["slug"]: q for q in s["pages"]}
+            while up and len(chain) < 10:
+                chain.insert(0, by_slug[up])
+                up = by_slug[up]["parent"]
+            for q in chain:
+                trail += crumb(q["title"], q["slug"] + ".html") + SEP
             trail += crumb(p["title"])
             write(folder / f'{p["slug"]}.html', render(
-                template, head_title=esc(f'{p["title"]} · {site_name}'), site_name=esc(site_name), root="../",
+                template, head_title=f'{plain(p["title"])} · {esc(site_name)}', site_name=esc(site_name), root="../",
                 body_class=f'mc-{s["mat"]}', trail=trail, main=main))
             count += 1
 

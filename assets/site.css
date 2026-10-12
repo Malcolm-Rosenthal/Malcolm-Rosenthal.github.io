@@ -193,6 +193,11 @@ a.tab:hover { background: var(--lk-accent); color: var(--lk-ink); }
 @media (max-width: 860px) { .note .download { float: none; margin: 0 0 1em; } }
 [data-style="serious"] .cv h2 { border-bottom: 1px solid var(--rule); }
 
+/* Doors set into a page's text: the way on to the next page of the story. */
+.note .doors { margin: 1.4em 0 1.6em; font-size: 16px; line-height: 1.25; }
+.note .door { width: 190px; }
+[data-style="serious"] .note .doors { margin: 1em 0 1.2em; }
+
 /* Rows: a list of dated things, newest first. */
 .rows { list-style: none; margin: 0; padding: 0; font-family: var(--font-serif); }
 .rows li { display: flex; gap: 14px; align-items: baseline; padding: 10px 0; border-top: 2px dotted var(--lk-ink); }

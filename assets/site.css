@@ -176,6 +176,21 @@ a.tab:hover { background: var(--lk-accent); color: var(--lk-ink); }
 .note th { background: var(--lk-bar); }
 .note .footnotes { font-size: .85em; }
 
+/* A CV (layout: cv in the page's settings). Each line stays as typed; a
+   line that wraps hangs, as references do; a date sits at the right edge. */
+.cv { font-size: 16px; line-height: 1.45; }
+.cv h2 { font: 700 13px var(--font-sans); letter-spacing: .12em; text-transform: uppercase;
+  margin: 2.4em 0 1.1em; padding-bottom: 6px; border-bottom: var(--lk-line) solid var(--lk-ink); }
+.cv h1 + h2 { margin-top: 1.2em; }
+.cv h3 { font-size: 17px; margin: 1.4em 0 .7em; }
+.cv-entry { margin: 0 0 1.05em; }
+.cv-line { display: flex; gap: 18px; align-items: baseline; }
+.cv-what { flex: 1; min-width: 0; }
+.cv-entry.solo .cv-what { padding-left: 1.6em; text-indent: -1.6em; }
+.cv-when { flex: none; font: 12px var(--font-mono); color: var(--lk-ink-soft); white-space: nowrap; text-align: right; }
+.cv a { word-break: break-all; }
+[data-style="serious"] .cv h2 { border-bottom: 1px solid var(--rule); }
+
 /* Rows: a list of dated things, newest first. */
 .rows { list-style: none; margin: 0; padding: 0; font-family: var(--font-serif); }
 .rows li { display: flex; gap: 14px; align-items: baseline; padding: 10px 0; border-top: 2px dotted var(--lk-ink); }

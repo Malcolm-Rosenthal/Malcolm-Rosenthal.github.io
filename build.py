@@ -33,6 +33,7 @@ Settings a PAGE understands:
     note    a small line under the name on the door
     link    a web address. The door goes straight there and no page is made.
     draft   yes: skip this file entirely
+    layout  cv: a CV, typed line by line (see the note at the top of cv.md)
 
 Settings a SECTION's index.md understands, as well as title and order:
     mat     slate, moss, tan, indigo or plum
@@ -54,6 +55,7 @@ as of build day, for the rare browser that runs no JavaScript.
 """
 
 import html
+import re
 import shutil
 import sys
 from datetime import date, datetime
@@ -139,6 +141,37 @@ def to_html(markdown):
     return markdown2.markdown(markdown, extras=MD_EXTRAS).replace("{{age-hours}}", age_hours(BORN))
 
 
+def inline(text):
+    """One line of Markdown, without the paragraph round it."""
+    out = markdown2.markdown(text, extras=["smarty-pants"]).strip()
+    return out[3:-4] if out.startswith("<p>") and out.endswith("</p>") else out
+
+
+def render_cv(text):
+    """A CV: sections, groups, and entries whose lines stay as typed, with an
+    optional date at the right-hand edge after ` | `."""
+    text = re.sub(r"<!--.*?-->", "", text, flags=re.S)
+    out = []
+    for block in re.split(r"\n\s*\n", text.strip()):
+        entry = []
+        for line in (l.strip() for l in block.splitlines()):
+            if not line:
+                continue
+            if line.startswith("## ") or line.startswith("### "):
+                level = 2 if line.startswith("## ") else 3
+                out.append(f"<h{level}>{inline(line[level + 1:])}</h{level}>")
+                continue
+            words, bar, when = line.rpartition(" | ")
+            if not bar:
+                words, when = line, ""
+            right = f'<span class="cv-when">{inline(when)}</span>' if when else ""
+            entry.append(f'<div class="cv-line"><span class="cv-what">{inline(words)}</span>{right}</div>')
+        if entry:
+            solo = " solo" if len(entry) == 1 else ""
+            out.append(f'<div class="cv-entry{solo}">{"".join(entry)}</div>')
+    return "\n".join(out)
+
+
 def slot(message):
     """What an empty page shows instead of nothing, so it says how to fill it."""
     return f'<span class="slot">{esc(message)}</span>'
@@ -167,6 +200,7 @@ def load():
                 "date": parse_date(m.get("date"), f),
                 "note": m.get("note", ""),
                 "link": m.get("link", ""),
+                "layout": m.get("layout", ""),
                 "body": b,
             })
         dated = any(p["date"] for p in pages)
@@ -304,8 +338,14 @@ def build():
             if p["link"]:
                 continue
             when = f'<div class="kicker">{esc(nice_date(p["date"]))}</div>' if p["date"] else ""
-            body = to_html(p["body"]) if p["body"] else slot(f'Nothing written yet. Write in {p["src"]}')
-            main = (f'<main class="page"><article class="note long">{when}<h1>{esc(p["title"])}</h1>'
+            if not p["body"]:
+                body = slot(f'Nothing written yet. Write in {p["src"]}')
+            elif p["layout"] == "cv":
+                body = render_cv(p["body"])
+            else:
+                body = to_html(p["body"])
+            kind = " cv" if p["layout"] == "cv" else ""
+            main = (f'<main class="page"><article class="note long{kind}">{when}<h1>{esc(p["title"])}</h1>'
                     f'{body}</article></main>')
             trail = crumb("Home", "../index.html", home=True) + SEP
             if s["has_page"]:

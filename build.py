@@ -34,6 +34,8 @@ Settings a PAGE understands:
     link    a web address. The door goes straight there and no page is made.
     draft   yes: skip this file entirely
     layout  cv: a CV, typed line by line (see the note at the top of cv.md)
+    pdf     a PDF in the same folder, offered as "Download PDF" at the top.
+            Left out quietly while the file is not there yet.
 
 Settings a SECTION's index.md understands, as well as title and order:
     mat     slate, moss, tan, indigo or plum
@@ -201,6 +203,7 @@ def load():
                 "note": m.get("note", ""),
                 "link": m.get("link", ""),
                 "layout": m.get("layout", ""),
+                "pdf": m.get("pdf", ""),
                 "body": b,
             })
         dated = any(p["date"] for p in pages)
@@ -345,6 +348,9 @@ def build():
             else:
                 body = to_html(p["body"])
             kind = " cv" if p["layout"] == "cv" else ""
+            if p["pdf"] and (CONTENT / s["slug"] / p["pdf"]).exists():
+                href = esc(p["pdf"], quote=True)
+                body = f'<p class="download"><a class="btn" href="{href}">Download PDF</a></p>' + body
             main = (f'<main class="page"><article class="note long{kind}">{when}<h1>{esc(p["title"])}</h1>'
                     f'{body}</article></main>')
             trail = crumb("Home", "../index.html", home=True) + SEP

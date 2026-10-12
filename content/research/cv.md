@@ -2,6 +2,7 @@
 title: CV
 order: 3
 layout: cv
+pdf: cv.pdf
 ---
 
 <!--
@@ -140,7 +141,7 @@ Lecture presentation: *Taxonomic skew in research: defining the issue*
 **SICB 2018,** San Francisco, CA. | 2018
 *Examining microhabitat structure and its use by wolf spiders.*
 
-**Animal Behavior Society Meeting**, Toronto, CA. | 2017
+**Animal Behavior Society Meeting**, Toronto, ON. | 2017
 *Examining fitness effects of signals across contexts in a mate-guarding jumping spider.*
 
 **Animal Behavior Society Meeting**, Columbia, MO. | 2016
@@ -176,8 +177,8 @@ Lecture presentation: *Taxonomic skew in research: defining the issue*
 ### Current courses
 
 **Columbia University**
-Animal Behavior through Fieldwork | Summer 2025 - current
-Frontiers of Science | Fall 2023 - current
+Animal Behavior through Fieldwork | Summer 2025 – current
+Frontiers of Science | Fall 2023 – current
 
 ### Past courses
 
@@ -190,11 +191,11 @@ Animal Behavior (seminar course) | 2021
 Special Topics in Behavioral Ecology (lecture course) | 2016
 
 **University of Nebraska-Lincoln**
-Organismic Biology | 2011-2012, 2014-2015
+Organismic Biology | 2011 – 2012, 2014 – 2015
 Arachnology | 2013
 Communicating Science through Outreach | 2013
-Vertebrate Zoology | 2010-2011
-Introduction to Biology | 2009-2010
+Vertebrate Zoology | 2010 – 2011
+Introduction to Biology | 2009 – 2010
 
 ## Advising & Mentorship
 
@@ -255,12 +256,12 @@ Reed Stubbendieck
 ## Outreach & Press
 
 **This American Life** (interview) | 2019
-“Episode 674 – Get a spine!”
+[“Episode 674 – Get a spine!”](https://www.thisamericanlife.org/674/get-a-spine/act-two-7)
 
 **KQED, California Sounds** (interview) | 2019
-“The man who listens to spider sex most days”
+[“The man who listens to spider sex most days”](https://www.kqed.org/news/11757086/california-sounds-the-man-who-listens-to-spider-sex-most-days)
 
-**New Heads for New People** (co-host) | 2016-2017
+**New Heads for New People** (co-host) | 2016 – 2017
 *16-episode podcast series about science and culture*
 
 **Eight-Legged Encounters** (co-organizer)

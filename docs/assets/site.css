@@ -188,7 +188,9 @@ a.tab:hover { background: var(--lk-accent); color: var(--lk-ink); }
 .cv-what { flex: 1; min-width: 0; }
 .cv-entry.solo .cv-what { padding-left: 1.6em; text-indent: -1.6em; }
 .cv-when { flex: none; font: 12px var(--font-mono); color: var(--lk-ink-soft); white-space: nowrap; text-align: right; }
-.cv a { word-break: break-all; }
+.cv a[href^="http"] { word-break: break-word; }
+.note .download { float: right; margin: 6px 0 0 16px; }
+@media (max-width: 860px) { .note .download { float: none; margin: 0 0 1em; } }
 [data-style="serious"] .cv h2 { border-bottom: 1px solid var(--rule); }
 
 /* Rows: a list of dated things, newest first. */

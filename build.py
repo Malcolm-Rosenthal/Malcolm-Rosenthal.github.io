@@ -40,7 +40,8 @@ Settings a SECTION's index.md understands, as well as title and order:
     show    how many doors the home board shows before the "more" door
     more    the name of that "more" door, which leads to the section page
 
-Settings home.md understands: title, kicker, photo (a path inside assets/),
+Settings home.md understands: title, kicker, subtitle (the line under the name),
+photo (a path inside assets/),
 and born: 1990-01-31 (or 1990-01-31T14:30), which any page can use:
 
     I am {{age-hours}} hours old.
@@ -241,6 +242,8 @@ def build():
     if kicker:
         note.append(f'<div class="kicker">{esc(kicker)}</div>')
     note.append(f"<h1>{esc(site_name)}</h1>")
+    if home_meta.get("subtitle"):
+        note.append(f'<p class="subtitle">{esc(home_meta["subtitle"])}</p>')
     note.append(to_html(home_body) if home_body else slot("Nothing written yet. Write in content/home.md"))
     note.append("</section>")
     main = ['<main class="board">', "".join(note)]

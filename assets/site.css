@@ -149,6 +149,10 @@ a.tab:hover { background: var(--lk-accent); color: var(--lk-ink); }
   border-radius: 50%; background: var(--lk-accent); border: 2px solid var(--lk-ink); }
 .age { white-space: nowrap; font-variant-numeric: tabular-nums; }
 .age sup { font-size: .7em; line-height: 0; }
+/* The job title under the name: set apart from the prose by type, not by colour. */
+.note .subtitle { font: 600 14.5px/1.4 var(--font-sans); color: var(--lk-ink-soft); margin: -2px 0 14px;
+  padding-bottom: 12px; border-bottom: var(--lk-line) dotted var(--lk-ink); }
+[data-style="serious"] .note .subtitle { border-bottom: 1px solid var(--rule); }
 .kicker { font: 700 11px var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--lk-ink-soft); }
 
 /* Everything Markdown can produce, inside a note. */

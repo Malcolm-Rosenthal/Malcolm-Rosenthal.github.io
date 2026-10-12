@@ -1,6 +1,7 @@
 ---
 title: Malcolm Rosenthal
 kicker: Etc. Spider time!
+subtitle: Frontiers of Science Fellow and Faculty Lecturer in the discipline of Ecology, Evolution, and Environmental Biology
 photo: img/avatar.jpg
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: CV
-order: 3
+order: 1
 layout: cv
 pdf: cv.pdf
 ---

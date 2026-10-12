@@ -40,13 +40,20 @@ Settings a SECTION's index.md understands, as well as title and order:
     show    how many doors the home board shows before the "more" door
     more    the name of that "more" door, which leads to the section page
 
-Settings home.md understands: title, kicker, photo (a path inside assets/).
+Settings home.md understands: title, kicker, photo (a path inside assets/),
+and born: 1990-01-31 (or 1990-01-31T14:30), which any page can use:
+
+    I am {{age-hours}} hours old.
+
+The number is worked out in the visitor's browser on every visit, to four
+significant figures in scientific notation. The build also writes in the value
+as of build day, for the rare browser that runs no JavaScript.
 """
 
 import html
 import shutil
 import sys
-from datetime import date
+from datetime import date, datetime
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
@@ -105,8 +112,26 @@ def nice_date(d):
     return f"{d.strftime('%B')} {d.day}, {d.year}"
 
 
+BORN = ""  # set from content/home.md when the build starts
+
+
+def age_hours(born):
+    """The {{age-hours}} tag: a span the script in site.js keeps current."""
+    if not born:
+        return '<span class="slot" style="display:inline">add born: to content/home.md</span>'
+    try:
+        start = datetime.fromisoformat(born)
+    except ValueError:
+        sys.exit(f"content/home.md: born must look like 1990-01-31 or 1990-01-31T14:30, not '{born}'")
+    hours = (datetime.now() - start).total_seconds() / 3600
+    mantissa, exponent = f"{hours:.3e}".split("e")
+    return (f'<span class="age" data-born="{esc(born, quote=True)}" data-unit="hours">'
+            f'{mantissa} &times; 10<sup>{int(exponent)}</sup></span>')
+
+
 def to_html(markdown):
-    return markdown2.markdown(markdown, extras=MD_EXTRAS)
+    # After conversion, not before: smarty-pants would curl the quotes in the tag.
+    return markdown2.markdown(markdown, extras=MD_EXTRAS).replace("{{age-hours}}", age_hours(BORN))
 
 
 def slot(message):
@@ -198,7 +223,9 @@ def write(path, text):
 
 def build():
     template = (ROOT / "templates" / "base.html").read_text(encoding="utf-8")
+    global BORN
     home_meta, home_body = read(CONTENT / "home.md")
+    BORN = home_meta.get("born", "")
     site_name = home_meta.get("title", "Home")
     sections = load()
 

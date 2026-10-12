@@ -147,6 +147,8 @@ a.tab:hover { background: var(--lk-accent); color: var(--lk-ink); }
 .note > :last-child { margin-bottom: 0; }
 .pin { position: absolute; top: -7px; left: 50%; margin-left: -7px; width: 14px; height: 14px;
   border-radius: 50%; background: var(--lk-accent); border: 2px solid var(--lk-ink); }
+.age { white-space: nowrap; font-variant-numeric: tabular-nums; }
+.age sup { font-size: .7em; line-height: 0; }
 .kicker { font: 700 11px var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--lk-ink-soft); }
 
 /* Everything Markdown can produce, inside a note. */

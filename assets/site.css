@@ -198,6 +198,46 @@ a.tab:hover { background: var(--lk-accent); color: var(--lk-ink); }
 .note .door { width: 190px; }
 [data-style="serious"] .note .doors { margin: 1em 0 1.2em; }
 
+/* A page with a sidebar: the paper on the left, the documents on the right. */
+.page.has-side { max-width: 1080px; display: grid; grid-template-columns: minmax(0, 1fr) 260px;
+  gap: 0 32px; align-items: start; }
+.page.has-side > * + * { margin-top: 0; }
+.side { position: sticky; top: 84px; margin-top: 26px; }
+.side .mat { padding: 16px; }
+
+/* Documents: the Board's file tile. Cool aqua where everything else is paper,
+   and a dog-eared corner, so a paper never reads as a note. */
+:root { --tile: #e4f1f7; --tile-deep: #9dbfca; }
+.files { display: flex; flex-direction: column; gap: 14px; }
+.file { position: relative; display: flex; flex-direction: column; gap: 5px; padding: 12px 30px 11px 12px;
+  text-decoration: none; color: var(--lk-ink); background: var(--tile);
+  border: var(--lk-line) solid var(--lk-ink); border-radius: 5px;
+  box-shadow: var(--rest) var(--rest) 0 var(--lk-ink); transition: box-shadow 140ms ease-out, transform 140ms ease-out; }
+.file:hover, .file:focus-visible { transform: translate(-3px, -3px); box-shadow: 5px 5px 0 var(--lk-ink); outline: none; }
+.file:active { transform: translate(2px, 2px); box-shadow: 0 0 0 var(--lk-ink); }
+.fileMark { position: absolute; top: 0; right: 0; width: 22px; height: 22px; border-radius: 0 2px 0 0;
+  background: linear-gradient(225deg, var(--mat-fill, var(--lk-board)) 0 50%, var(--lk-ink) 50% calc(50% + 2px), var(--tile-deep) calc(50% + 2px)); }
+.fileKind { font: 700 9.5px var(--font-mono); letter-spacing: .09em; text-transform: uppercase; color: var(--lk-ink-soft); }
+.fileName { font: 700 14px/1.3 var(--font-serif); }
+.fileWhere { font: 12.5px/1.3 var(--font-serif); color: var(--lk-ink-soft); }
+.cv-entry { scroll-margin-top: 90px; }
+.cv-entry:target { background: var(--tile); outline: var(--lk-line) solid var(--tile); }
+
+@media (max-width: 1000px) {
+  .page.has-side { display: block; max-width: 760px; }
+  .page.has-side > * + * { margin-top: 30px; }
+  .side { position: static; margin-top: 52px; }
+}
+
+[data-style="serious"] .page.has-side { max-width: 1000px; }
+[data-style="serious"] .side .mat { padding: 16px 0 0; }
+[data-style="serious"] .file { background: none; border: none; box-shadow: none; padding: 0; transform: none; }
+[data-style="serious"] .fileMark { display: none; }
+[data-style="serious"] .file .fileName { font-weight: 400; text-decoration: underline; text-decoration-color: var(--rule);
+  text-underline-offset: 3px; }
+[data-style="serious"] .file:hover .fileName { color: var(--lk-string); }
+[data-style="serious"] .cv-entry:target { background: #f0eee6; outline-color: #f0eee6; }
+
 /* Rows: a list of dated things, newest first. */
 .rows { list-style: none; margin: 0; padding: 0; font-family: var(--font-serif); }
 .rows li { display: flex; gap: 14px; align-items: baseline; padding: 10px 0; border-top: 2px dotted var(--lk-ink); }

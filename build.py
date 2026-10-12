@@ -37,6 +37,9 @@ Settings a PAGE understands:
     parent  the slug of another page in this folder. The page then has no door
             on the mat; its door goes in the parent's text, and the trail runs
             through the parent.
+    papers  references from the CV to show beside the page, as documents.
+            A few words from each title, separated by |, e.g.
+            papers: novel substrate-borne | microhabitat specialization
     pdf     a PDF in the same folder, offered as "Download PDF" at the top.
             Left out quietly while the file is not there yet.
 
@@ -158,20 +161,48 @@ def inline(text):
     return out[3:-4] if out.startswith("<p>") and out.endswith("</p>") else out
 
 
+PUBS = []      # every reference in the CV's publications section
+CV_HREF = ""   # where the CV page is, from the top of the site
+
+
+def slugify(text):
+    return re.sub(r"[^a-z0-9]+", "-", text.lower()).strip("-")
+
+
+def parse_pub(line):
+    """Year, title and journal out of one reference line, as typed in cv.md:
+    Authors. 2021. Title. ***Journal***, 127: 135-144."""
+    m = re.search(r"\.\s(\d{4})\.\s+(.+?)\s+\*\*\*(.+?)\*\*\*", line)
+    if not m:
+        return None
+    year, title, journal = m.group(1), m.group(2).rstrip(". "), m.group(3)
+    words = re.sub(r"[*_]", "", title)
+    return {"year": year, "title": title, "journal": journal, "plain": words,
+            "id": f"pub-{year}-" + slugify(" ".join(words.split()[:5]))}
+
+
 def render_cv(text):
     """A CV: sections, groups, and entries whose lines stay as typed, with an
     optional date at the right-hand edge after ` | `."""
     text = re.sub(r"<!--.*?-->", "", text, flags=re.S)
-    out = []
+    out, section, anchor = [], "", ""
     for block in re.split(r"\n\s*\n", text.strip()):
-        entry = []
+        entry, anchor = [], ""
         for line in (l.strip() for l in block.splitlines()):
             if not line:
                 continue
             if line.startswith("## ") or line.startswith("### "):
                 level = 2 if line.startswith("## ") else 3
+                if level == 2:
+                    section = line[3:]
                 out.append(f"<h{level}>{inline(line[level + 1:])}</h{level}>")
                 continue
+            if "publications" in section.lower() and not entry:
+                pub = parse_pub(line)
+                if pub:
+                    anchor = f' id="{pub["id"]}"'
+                    if not any(q["id"] == pub["id"] for q in PUBS):
+                        PUBS.append(pub)
             words, bar, when = line.rpartition(" | ")
             if not bar:
                 words, when = line, ""
@@ -179,8 +210,28 @@ def render_cv(text):
             entry.append(f'<div class="cv-line"><span class="cv-what">{inline(words)}</span>{right}</div>')
         if entry:
             solo = " solo" if len(entry) == 1 else ""
-            out.append(f'<div class="cv-entry{solo}">{"".join(entry)}</div>')
+            out.append(f'<div class="cv-entry{solo}"{anchor}>{"".join(entry)}</div>')
     return "\n".join(out)
+
+
+def papers_aside(spec, where, root):
+    """The sidebar: each named paper as a document tile that opens its CV entry."""
+    tiles = []
+    for words in (w.strip() for w in spec.split("|")):
+        if not words:
+            continue
+        hits = [q for q in PUBS if words.lower() in q["plain"].lower()]
+        if len(hits) != 1:
+            found = "nothing" if not hits else f"{len(hits)} papers"
+            sys.exit(f'{where}: papers: "{words}" matches {found} in the CV; use more words from the title')
+        q = hits[0]
+        tiles.append(
+            f'<a class="file" href="{root}{CV_HREF}#{q["id"]}"><span class="fileMark"></span>'
+            f'<span class="fileKind">Paper · {q["year"]}</span>'
+            f'<span class="fileName">{inline(q["title"])}</span>'
+            f'<span class="fileWhere">{inline("*" + q["journal"] + "*")}</span></a>')
+    return ('<aside class="side"><section class="mat mc-slate"><h2 class="tab">Papers</h2>'
+            f'<div class="files">{"".join(tiles)}</div></section></aside>')
 
 
 def plain(title):
@@ -237,6 +288,7 @@ def load():
                 "layout": m.get("layout", ""),
                 "pdf": m.get("pdf", ""),
                 "parent": m.get("parent", ""),
+                "papers": m.get("papers", ""),
                 "body": b,
             })
         slugs = {p["slug"] for p in pages}
@@ -310,6 +362,12 @@ def build():
     FIGURES = number(home_meta.get("age-figures"), 4)
     site_name = home_meta.get("title", "Home")
     sections = load()
+    global CV_HREF
+    for sec in sections:
+        for q in sec["pages"]:
+            if q["layout"] == "cv" and q["body"]:
+                CV_HREF = f'{sec["slug"]}/{q["slug"]}.html'
+                render_cv(q["body"])
 
     if OUT.exists():
         shutil.rmtree(OUT)
@@ -390,8 +448,10 @@ def build():
             if p["pdf"] and (CONTENT / s["slug"] / p["pdf"]).exists():
                 href = esc(p["pdf"], quote=True)
                 body = f'<p class="download"><a class="btn" href="{href}">Download PDF</a></p>' + body
-            main = (f'<main class="page"><article class="note long{kind}">{when}<h1>{inline(p["title"])}</h1>'
-                    f'{body}</article></main>')
+            side = papers_aside(p["papers"], p["src"], "../") if p["papers"] else ""
+            wide = " has-side" if side else ""
+            main = (f'<main class="page{wide}"><article class="note long{kind}">{when}<h1>{inline(p["title"])}</h1>'
+                    f'{body}</article>{side}</main>')
             trail = crumb("Home", "../index.html", home=True) + SEP
             if s["has_page"]:
                 trail += crumb(s["title"], "index.html") + SEP

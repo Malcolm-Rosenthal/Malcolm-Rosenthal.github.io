@@ -1,6 +1,7 @@
 ---
 title: Invention and innovation in *Schizocosa floridana*
 parent: novelty
+papers: novel substrate-borne vibratory signal | microhabitat specialization
 ---
 
 Innovation on a theme can push signals into new areas, but new signals built on the infrastructure of the old are likely to inherit the same general shape, the same constraints.

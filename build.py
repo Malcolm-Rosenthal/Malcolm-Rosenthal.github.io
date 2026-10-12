@@ -424,7 +424,7 @@ def build():
                     f'<a class="what" href="{esc(p["link"], quote=True) if p["link"] else p["slug"] + ".html"}">'
                     f'{inline(p["title"])}</a></li>' for p in s["top"])
                 main.append(f'<section class="mat"><div class="note"><ul class="rows">{rows}</ul></div></section>')
-            elif s["top"]:
+            elif s["top"] and "{{door:" not in s["body"]:  # the text places its own doors
                 doors = "".join(door(p, s, "../") for p in s["top"])
                 main.append(f'<section class="mat"><div class="doors">{doors}</div></section>')
             main.append("</main>")

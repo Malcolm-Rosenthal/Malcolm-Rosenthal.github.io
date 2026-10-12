@@ -162,8 +162,8 @@ a.tab:hover { background: var(--lk-accent); color: var(--lk-ink); }
 .note p, .note ul, .note ol, .note blockquote, .note pre, .note table, .note figure { margin: 0 0 .9em; }
 .note ul, .note ol { padding-left: 1.3em; }
 .note li { margin-bottom: .25em; }
-.note a:not(.btn):not(.door) { color: var(--lk-string); text-underline-offset: 2px; }
-.note a:not(.btn):not(.door):hover { background: var(--lk-accent); color: var(--lk-ink); }
+.note a:not(.btn):not(.door):not(.file) { color: var(--lk-string); text-underline-offset: 2px; }
+.note a:not(.btn):not(.door):not(.file):hover { background: var(--lk-accent); color: var(--lk-ink); }
 .note img { max-width: 100%; height: auto; border: var(--lk-line) solid var(--lk-ink); }
 .note blockquote { margin-left: 0; padding: 2px 0 2px 16px; border-left: 6px solid var(--lk-accent); }
 .note code { font: .85em var(--font-mono); background: var(--lk-bar); padding: 1px 4px; }
@@ -196,6 +196,12 @@ a.tab:hover { background: var(--lk-accent); color: var(--lk-ink); }
 /* Doors set into a page's text: the way on to the next page of the story. */
 .note .doors { margin: 1.4em 0 1.6em; font-size: 16px; line-height: 1.25; }
 .note .door { width: 190px; }
+.doors > .file { width: 190px; justify-content: flex-start; padding-top: 14px; }
+.note .file .fileName { font-size: 15px; }
+.note .file { --mat-fill: var(--lk-paper); }  /* the folded corner shows the paper behind it */
+.note h2 { scroll-margin-top: 90px; }
+[data-style="serious"] .doors > .file { display: flex; width: auto; padding: 5px 0; flex-direction: row; gap: 12px; align-items: baseline; }
+[data-style="serious"] .doors > .file .fileName { font-weight: 400; font-size: 17px; order: -1; }
 [data-style="serious"] .note .doors { margin: 1em 0 1.2em; }
 
 /* A page with a sidebar: the paper on the left, the documents on the right. */
@@ -316,7 +322,7 @@ a.tab:hover { background: var(--lk-accent); color: var(--lk-ink); }
 [data-style="serious"] .kicker { font-weight: 400; }
 [data-style="serious"] .board > .photo { max-width: 130px; margin-top: 22px !important; }
 [data-style="serious"] .photo { border: 1px solid var(--rule); border-radius: 2px; box-shadow: none; }
-[data-style="serious"] .note a:not(.btn):not(.door):hover { background: none; color: var(--lk-ink); }
+[data-style="serious"] .note a:not(.btn):not(.door):not(.file):hover { background: none; color: var(--lk-ink); }
 [data-style="serious"] .note img, [data-style="serious"] .note pre { border: 1px solid var(--rule); }
 [data-style="serious"] .note th, [data-style="serious"] .note td { border: 1px solid var(--rule); }
 [data-style="serious"] .note blockquote { border-left: 2px solid var(--rule); }

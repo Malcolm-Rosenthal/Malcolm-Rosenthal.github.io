@@ -32,6 +32,10 @@ Settings a PAGE understands:
     date    2026-10-04. Dated pages sort newest first and show the date.
     note    a small line under the name on the door
     link    a web address. The door goes straight there and no page is made.
+            A file in the same folder (link: syllabus.pdf) works too, and a
+            .pdf is drawn as a document. #heading goes to a heading on the
+            section's own page.
+    hide    yes: no door on the mat; place the door in text with {{door: }}
     draft   yes: skip this file entirely
     layout  cv: a CV, typed line by line (see the note at the top of cv.md)
     parent  the slug of another page in this folder. The page then has no door
@@ -288,6 +292,7 @@ def load():
                 "layout": m.get("layout", ""),
                 "pdf": m.get("pdf", ""),
                 "parent": m.get("parent", ""),
+                "hide": m.get("hide", "").lower() in ("yes", "true"),
                 "papers": m.get("papers", ""),
                 "body": b,
             })
@@ -312,7 +317,7 @@ def load():
             "dated": dated,
             "body": body,
             "pages": pages,
-            "top": [p for p in pages if not p["parent"]],
+            "top": [p for p in pages if not p["parent"] and not p["hide"]],
         })
     sections.sort(key=lambda s: (s["order"], s["title"].lower()))
     return sections
@@ -322,12 +327,19 @@ def load():
 
 def door(page, section, root):
     """A door, as seen from a page whose way back to the top is `root`."""
-    if page["link"]:
+    if page["link"].startswith("#"):
+        href = f'{root}{section["slug"]}/index.html{esc(page["link"], quote=True)}'
+    elif page["link"] and "://" not in page["link"] and not page["link"].startswith("mailto:"):
+        href = f'{root}{section["slug"]}/{esc(page["link"], quote=True)}'
+    elif page["link"]:
         href = esc(page["link"], quote=True)
     else:
         href = f'{root}{section["slug"]}/{page["slug"]}.html'
     small = page["note"] or (nice_date(page["date"]) if page["date"] else "")
     degree = f'<span class="degree">{esc(small)}</span>' if small else ""
+    if page["link"].lower().endswith(".pdf"):
+        return (f'<a class="file" href="{href}"><span class="fileMark"></span><span class="fileKind">PDF</span>'
+                f'<span class="fileName">{inline(page["title"])}</span></a>')
     return f'<a class="door" href="{href}"><span class="name">{inline(page["title"])}</span>{degree}</a>'
 
 

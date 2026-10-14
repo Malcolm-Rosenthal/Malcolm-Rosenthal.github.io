@@ -1,6 +1,7 @@
 ---
 title: Novelty
-order: 2
+order: 1
+parent: research-projects
 ---
 
 How do new animal signals evolve? Are they modifications of older signals? Or are they brand new inventions? Maybe new signals can be imported by hybridizing with other species?

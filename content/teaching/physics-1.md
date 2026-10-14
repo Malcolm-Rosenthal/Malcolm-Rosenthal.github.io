@@ -269,7 +269,7 @@ An effect at high speeds in which the passage of time on a moving clock (from th
 
 **Calculation of energy or mass as a function of speed, where** E **is energy (in joules),** c **is the speed of light (in meters per second), and** 𝛾 **is, well,** 𝛾.
 
-<div class="eq"><math display="block"><mi>E</mi><mo>=</mo><mrow><mo>(</mo><mi>γ</mi><mi>m</mi><mo>)</mo></mrow><msup><mi>c</mi><mn>2</mn></msup></math></div>
+<div class="eq"><math display="block"><mi>E</mi><mo>=</mo><mi>γ</mi><msub><mi>m</mi><mn>0</mn></msub><msup><mi>c</mi><mn>2</mn></msup></math></div>
 
 [^1]: Yes, this is the physics recap (I promise).
 

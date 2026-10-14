@@ -1,4 +1,5 @@
 ---
 title: Taxonomic bias
-order: 4
+order: 3
+parent: research-projects
 ---

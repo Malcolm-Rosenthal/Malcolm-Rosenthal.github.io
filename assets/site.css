@@ -93,11 +93,13 @@ a.crumb:hover { background: var(--lk-bar); }
 .board { max-width: 1180px; margin: 0 auto; padding: 26px 20px 10px;
   display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 30px 28px; align-items: start; }
 .board > .mat { grid-column: span 6; margin-top: 30px; }
-.board > .p-note      { grid-column: 1 / span 5; margin-top: 34px; }
-.board > .p-photo     { grid-column: 6 / span 2; margin-top: 12px; }
-.board > .p-what-i-do     { grid-column: 8 / span 5; margin-top: 58px; }
-.board > .p-me            { grid-column: 1 / span 5; margin-top: 30px; }
-.board > .p-things-i-made { grid-column: 7 / span 4; margin-top: 54px; }
+.board > .p-me            { grid-column: 1 / span 3;  grid-row: 1; margin-top: 34px; justify-self: start; }
+.board > .p-note          { grid-column: 4 / span 5;  grid-row: 1; margin-top: 34px; }
+.board > .p-photo         { grid-column: 9 / span 2;  grid-row: 1; margin-top: 12px; }
+.board > .p-what-i-do     { grid-column: 4 / span 5;  grid-row: 2; margin-top: 4px; }
+.board > .p-things-i-made { grid-column: 9 / span 4;  grid-row: 2; margin-top: 30px; }
+/* Me is tall, not wide: its doors stack. */
+.board > .p-me .doors { flex-direction: column; }
 .board > .p-blog      { grid-column: 2 / span 9; margin-top: 30px; }
 
 /* ---- an inside page: one column of paper -------------------------------- */
@@ -291,7 +293,8 @@ a.tab:hover { background: var(--lk-accent); color: var(--lk-ink); }
 
 @media (max-width: 860px) {
   .board { grid-template-columns: 1fr; gap: 22px; padding: 18px 16px 6px; }
-  .board > * { grid-column: 1 !important; margin-top: 0 !important; }
+  .board > * { grid-column: 1 !important; grid-row: auto !important; margin-top: 0 !important; justify-self: stretch !important; }
+  .board > .p-me .doors { flex-direction: row; }
   .board > .mat { margin-top: 26px !important; }
   .board > .p-photo { max-width: 160px; }
   .door { width: calc(50% - 8px); }

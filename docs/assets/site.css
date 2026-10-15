@@ -93,13 +93,18 @@ a.crumb:hover { background: var(--lk-bar); }
 .board { max-width: 1180px; margin: 0 auto; padding: 26px 20px 10px;
   display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 30px 28px; align-items: start; }
 .board > .mat { grid-column: span 6; margin-top: 30px; }
-.board > .p-me            { grid-column: 1 / span 3;  grid-row: 1; margin-top: 34px; justify-self: start; }
-.board > .p-note          { grid-column: 4 / span 5;  grid-row: 1; margin-top: 34px; }
+.board > .p-me            { grid-column: 1 / span 3;  grid-row: 1 / span 2; margin-top: 34px; justify-self: start; align-self: stretch; }
+.board > .p-note          { grid-column: 4 / span 5;  grid-row: 1 / span 2; margin-top: 34px; align-self: stretch; }
 .board > .p-photo         { grid-column: 9 / span 2;  grid-row: 1; margin-top: 12px; }
-.board > .p-what-i-do     { grid-column: 4 / span 5;  grid-row: 2; margin-top: 4px; }
-.board > .p-things-i-made { grid-column: 9 / span 4;  grid-row: 2; margin-top: 30px; }
-/* Me is tall, not wide: its doors stack. */
-.board > .p-me .doors { flex-direction: column; }
+.board > .p-what-i-do     { grid-column: 9 / span 3;  grid-row: 2; margin-top: 0; justify-self: start; }
+.board > .p-things-i-made { grid-column: 4 / span 4;  grid-row: 3; margin-top: 4px; }
+/* Me and What I do are tall, not wide: their doors stack, and Me's doors
+   spread out to fill the height of the intro note beside it. */
+@media (min-width: 861px) {
+  .board > .p-me, .board > .p-what-i-do { display: flex; flex-direction: column; }
+  .board > .p-me .doors, .board > .p-what-i-do .doors { flex: 1; flex-direction: column; flex-wrap: nowrap; }
+  .board > .p-me .doors { justify-content: space-between; }
+}
 .board > .p-blog      { grid-column: 2 / span 9; margin-top: 30px; }
 
 /* ---- an inside page: one column of paper -------------------------------- */
@@ -294,7 +299,6 @@ a.tab:hover { background: var(--lk-accent); color: var(--lk-ink); }
 @media (max-width: 860px) {
   .board { grid-template-columns: 1fr; gap: 22px; padding: 18px 16px 6px; }
   .board > * { grid-column: 1 !important; grid-row: auto !important; margin-top: 0 !important; justify-self: stretch !important; }
-  .board > .p-me .doors { flex-direction: row; }
   .board > .mat { margin-top: 26px !important; }
   .board > .p-photo { max-width: 160px; }
   .door { width: calc(50% - 8px); }

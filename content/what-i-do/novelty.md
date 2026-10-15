@@ -1,5 +1,5 @@
 ---
-title: Novelty
+title: Making new sounds
 order: 1
 parent: research
 ---

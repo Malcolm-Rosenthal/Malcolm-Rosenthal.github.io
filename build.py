@@ -62,6 +62,9 @@ In any text:
                         straight after, with no blank line between:
                             {{mat: Collaborations}}
                             {{door: some-page}}
+    {{columns}}         two columns side by side. Each of these goes in a
+    {{column}}          paragraph of its own: {{columns}} opens the first column,
+    {{/columns}}        {{column}} starts the second, {{/columns}} ends them.
     {{todo: a note}}    a dashed box saying what still goes here.
 Titles may use *italics* (species names).
 
@@ -267,6 +270,10 @@ def with_doors(body, section, root):
         return (f'<section class="mat mc-{section["mat"]}"><h2 class="tab">{inline(m.group(1).strip())}</h2>'
                 f'<div class="doors">{doors}</div></section>')
 
+    for token, markup in (("{{columns}}", '<div class="cols"><div class="col">'),
+                          ("{{column}}", '</div><div class="col">'),
+                          ("{{/columns}}", "</div></div>")):
+        body = body.replace(f"<p>{token}</p>", markup)
     body = re.sub(r"<p>\s*\{\{mat:([^}]*)\}\}\s*((?:\{\{door:[^}]*\}\}\s*)+)</p>", mat, body)
     body = re.sub(r"<p>\s*(?:\{\{door:[^}]*\}\}\s*)+</p>", row, body)
     body = re.sub(r"\{\{door:([^}]*)\}\}", lambda m: one(m.group(1)), body)

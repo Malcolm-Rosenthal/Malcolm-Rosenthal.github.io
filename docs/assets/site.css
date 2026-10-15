@@ -126,6 +126,15 @@ a.crumb:hover { background: var(--lk-bar); }
 a.tab:hover { background: var(--lk-accent); color: var(--lk-ink); }
 .note .mat { margin: 2.6em 0 1.8em; }  /* room above for the tab */
 .note .mat .doors { margin: 0; }
+/* Two columns inside a page; mats in them shrink to fit their doors and the doors stack. */
+.note .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 0 30px; align-items: start; }
+.note .cols > .col:last-child { justify-self: end; }
+.note .cols .mat { width: fit-content; }
+.note .cols .mat .doors { flex-direction: column; }
+.note .cols .col > .doors:first-child { margin-top: 2.6em; }  /* level with the top of a mat beside it */
+@media (max-width: 700px) { .note .cols { grid-template-columns: 1fr; } .note .cols > .col:last-child { justify-self: start; } }
+[data-style="serious"] .note .cols { display: block; }
+[data-style="serious"] .note .cols > .col:last-child { justify-self: start; }
 
 /* ---- doors: a name and a band of its section's colour ------------------- */
 

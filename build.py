@@ -49,7 +49,8 @@ Settings a PAGE understands:
 
 Settings a SECTION's index.md understands, as well as title and order:
     mat     slate, moss, tan, indigo or plum
-    page    no: the section has no page of its own, only a mat (Elsewhere)
+    page    no: the section has no page of its own, only a mat
+    draft   yes: skip the whole section (no mat, no pages) until it is ready
     show    how many doors the home board shows before the "more" door
     more    the name of that "more" door, which leads to the section page
 
@@ -271,6 +272,8 @@ def load():
     for folder in sorted(p for p in CONTENT.iterdir() if p.is_dir()):
         index = folder / "index.md"
         meta, body = read(index) if index.exists() else ({}, "")
+        if meta.get("draft", "").lower() in ("yes", "true"):
+            continue
         mat = meta.get("mat", "slate")
         if mat not in MATS:
             sys.exit(f"{index}: mat must be one of {', '.join(MATS)}, not '{mat}'")

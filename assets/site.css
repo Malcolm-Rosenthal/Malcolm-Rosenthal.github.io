@@ -87,7 +87,7 @@ a.crumb:hover { background: var(--lk-bar); }
 
    Twelve columns, each piece nudged off the grid so it reads as placed by
    hand rather than tabulated. A section is placed by its folder name
-   (`p-research` is content/research/); one with no rule of its own takes
+   (`p-what-i-do` is content/what-i-do/); one with no rule of its own takes
    half the board. On a phone the pieces stack in reading order. */
 
 .board { max-width: 1180px; margin: 0 auto; padding: 26px 20px 10px;
@@ -95,10 +95,9 @@ a.crumb:hover { background: var(--lk-bar); }
 .board > .mat { grid-column: span 6; margin-top: 30px; }
 .board > .p-note      { grid-column: 1 / span 5; margin-top: 34px; }
 .board > .p-photo     { grid-column: 6 / span 2; margin-top: 12px; }
-.board > .p-research  { grid-column: 8 / span 5; margin-top: 58px; }
-.board > .p-teaching  { grid-column: 1 / span 4; margin-top: 30px; }
-.board > .p-projects  { grid-column: 5 / span 5; margin-top: 54px; }
-.board > .p-elsewhere { grid-column: 10 / span 3; margin-top: 18px; }
+.board > .p-what-i-do     { grid-column: 8 / span 5; margin-top: 58px; }
+.board > .p-me            { grid-column: 1 / span 5; margin-top: 30px; }
+.board > .p-things-i-made { grid-column: 7 / span 4; margin-top: 54px; }
 .board > .p-blog      { grid-column: 2 / span 9; margin-top: 30px; }
 
 /* ---- an inside page: one column of paper -------------------------------- */

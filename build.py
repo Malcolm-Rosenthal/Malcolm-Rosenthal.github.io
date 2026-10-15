@@ -57,6 +57,11 @@ Settings a SECTION's index.md understands, as well as title and order:
 In any text:
     {{door: slug}}      on a line of its own: a door to that page in this
                         folder. Several such lines together sit side by side.
+    {{mat: Name}}       a coloured mat with that name on its tab, set into the
+                        page. Put the doors that belong on it on the lines
+                        straight after, with no blank line between:
+                            {{mat: Collaborations}}
+                            {{door: some-page}}
     {{todo: a note}}    a dashed box saying what still goes here.
 Titles may use *italics* (species names).
 
@@ -257,6 +262,12 @@ def with_doors(body, section, root):
     def row(m):
         return '<div class="doors">' + "".join(one(x) for x in re.findall(r"\{\{door:([^}]*)\}\}", m.group(0))) + "</div>"
 
+    def mat(m):
+        doors = "".join(one(x) for x in re.findall(r"\{\{door:([^}]*)\}\}", m.group(2)))
+        return (f'<section class="mat mc-{section["mat"]}"><h2 class="tab">{inline(m.group(1).strip())}</h2>'
+                f'<div class="doors">{doors}</div></section>')
+
+    body = re.sub(r"<p>\s*\{\{mat:([^}]*)\}\}\s*((?:\{\{door:[^}]*\}\}\s*)+)</p>", mat, body)
     body = re.sub(r"<p>\s*(?:\{\{door:[^}]*\}\}\s*)+</p>", row, body)
     body = re.sub(r"\{\{door:([^}]*)\}\}", lambda m: one(m.group(1)), body)
     return re.sub(r"\{\{todo:\s*(.*?)\}\}", r'<span class="slot">\1</span>', body)

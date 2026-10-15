@@ -124,6 +124,8 @@ a.crumb:hover { background: var(--lk-bar); }
   font: 700 11.5px var(--font-sans); letter-spacing: .08em; text-transform: uppercase; text-decoration: none;
   white-space: nowrap; }
 a.tab:hover { background: var(--lk-accent); color: var(--lk-ink); }
+.note .mat { margin: 2.6em 0 1.8em; }  /* room above for the tab */
+.note .mat .doors { margin: 0; }
 
 /* ---- doors: a name and a band of its section's colour ------------------- */
 

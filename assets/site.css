@@ -136,6 +136,28 @@ a.tab:hover { background: var(--lk-accent); color: var(--lk-ink); }
 [data-style="serious"] .note .cols { display: block; }
 [data-style="serious"] .note .cols > .col:last-child { justify-self: start; }
 
+/* Text boxes and pinned pictures, for a page laid out on mats. */
+.note .box { background: var(--lk-paper); border: var(--lk-line) solid var(--lk-ink);
+  box-shadow: var(--rest) var(--rest) 0 var(--lk-ink); padding: 14px 18px; margin: 1.6em 0; }
+.note .mat > .box { margin: 0; }
+.note .box > :first-child { margin-top: 0; }
+.note .box > :last-child { margin-bottom: 0; }
+.note .mat > .tab ~ * ~ * { margin-top: 20px; }  /* space between what is pinned on a mat */
+.note .shot { margin: 0; }
+.note .shot a { display: block; }
+.note .shot img { display: block; width: 100%; height: auto; background: #fff; cursor: zoom-in;
+  border: var(--lk-line) solid var(--lk-ink); box-shadow: var(--rest) var(--rest) 0 var(--lk-ink); }
+.note .shots { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+@media (max-width: 700px) { .note .shots { grid-template-columns: 1fr; } }
+[data-style="serious"] .note .box { background: none; box-shadow: none; border: 1px solid var(--rule); }
+[data-style="serious"] .note .shot img { border: 1px solid var(--rule); box-shadow: none; }
+
+/* A picture opened full size, over the page. */
+.lightbox { position: fixed; inset: 0; z-index: 50; display: flex; align-items: center; justify-content: center;
+  padding: 3vh 3vw; background: rgba(24, 24, 24, .86); cursor: zoom-out; }
+.lightbox img { max-width: 100%; max-height: 100%; background: #fff;
+  border: var(--lk-line) solid var(--lk-ink); box-shadow: var(--rest) var(--rest) 0 var(--lk-ink); }
+
 /* ---- doors: a name and a band of its section's colour ------------------- */
 
 .doors { display: flex; flex-wrap: wrap; gap: 16px; }

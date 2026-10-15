@@ -62,6 +62,13 @@ In any text:
                         straight after, with no blank line between:
                             {{mat: Collaborations}}
                             {{door: some-page}}
+    {{mat: Name}}       ...with nothing after it on its line, opens a mat that
+    {{/mat}}            holds whatever follows, up to {{/mat}}: text boxes,
+    {{box}}             pictures, doors. {{box}} ... {{/box}} is a white text
+    {{/box}}            box. A picture on a line of its own is pinned, opens
+                        full size when clicked, and sits beside any picture
+                        straight after it. Each token goes in a paragraph of
+                        its own.
     {{columns}}         two columns side by side. Each of these goes in a
     {{column}}          paragraph of its own: {{columns}} opens the first column,
     {{/columns}}        {{column}} starts the second, {{/columns}} ends them.
@@ -252,6 +259,22 @@ def plain(title):
     return esc(title.replace("*", ""))
 
 
+def figures(body):
+    """A picture alone in its paragraph becomes a pinned figure that links to
+    the full-size file (site.js opens it over the page); pictures that follow
+    one another sit side by side."""
+    def one(m):
+        attrs = m.group(1).strip().rstrip("/").strip()
+        src = re.search(r'src="([^"]*)"', attrs)
+        if not src or "://" in src.group(1):
+            return m.group(0)
+        return f'<figure class="shot"><a href="{src.group(1)}"><img {attrs}></a></figure>'
+
+    body = re.sub(r"<p>\s*<img\s+([^>]*?)>\s*</p>", one, body)
+    return re.sub(r'(?:<figure class="shot">(?:(?!</figure>).)*</figure>\s*){2,}',
+                  lambda m: f'<div class="shots">{m.group(0).strip()}</div>', body, flags=re.S)
+
+
 def with_doors(body, section, root):
     """Turn {{door: slug}} lines into doors and {{todo: ...}} into notes."""
     by_slug = {p["slug"]: p for p in section["pages"]}
@@ -264,6 +287,12 @@ def with_doors(body, section, root):
 
     def row(m):
         return '<div class="doors">' + "".join(one(x) for x in re.findall(r"\{\{door:([^}]*)\}\}", m.group(0))) + "</div>"
+
+    for token, markup in (("{{/mat}}", "</section>"), ("{{box}}", '<div class="box">'), ("{{/box}}", "</div>")):
+        body = body.replace(f"<p>{token}</p>", markup)
+    body = re.sub(r"<p>\s*\{\{mat:([^}]*)\}\}\s*</p>",
+                  lambda m: f'<section class="mat mc-{section["mat"]}"><h2 class="tab">{inline(m.group(1).strip())}</h2>', body)
+    body = figures(body)
 
     def mat(m):
         doors = "".join(one(x) for x in re.findall(r"\{\{door:([^}]*)\}\}", m.group(2)))

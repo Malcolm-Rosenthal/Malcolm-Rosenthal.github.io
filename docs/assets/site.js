@@ -112,3 +112,33 @@ window.siteTrail = function () {
     nav.appendChild(el);
   });
 };
+
+/* A pinned picture (.shot) opens full size over the page when clicked; click
+   anywhere or press Esc to put it away. Without scripts, the link just opens
+   the picture. Ctrl/Cmd/Shift-click keeps its usual meaning. */
+document.addEventListener('click', function (ev) {
+  var link = ev.target.closest('.shot a');
+  if (!link || ev.button || ev.metaKey || ev.ctrlKey || ev.shiftKey) return;
+  ev.preventDefault();
+  var thumb = link.querySelector('img');
+  var before = document.activeElement;
+  var box = document.createElement('div');
+  box.className = 'lightbox';
+  box.setAttribute('role', 'dialog');
+  box.setAttribute('aria-label', (thumb && thumb.alt) || 'Picture');
+  box.tabIndex = -1;
+  var big = document.createElement('img');
+  big.src = link.href;
+  big.alt = (thumb && thumb.alt) || '';
+  box.appendChild(big);
+  function close() {
+    box.remove();
+    document.removeEventListener('keydown', onKey);
+    if (before && before.focus) before.focus();
+  }
+  function onKey(e) { if (e.key === 'Escape') close(); }
+  box.addEventListener('click', close);
+  document.addEventListener('keydown', onKey);
+  document.body.appendChild(box);
+  box.focus();
+});

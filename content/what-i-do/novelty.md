@@ -9,6 +9,7 @@ How do new animal signals evolve? Are they modifications of older signals? Or ar
 Like all questions of this kind, the answer is "yes". What's interesting to me is whether these different pathways lead to different kinds of new signals.
 
 {{door: novelty-floridana}}
+{{door: novelty-habitat}}
 
 {{mat: Collaborations}}
 {{door: novelty-red-wave}}

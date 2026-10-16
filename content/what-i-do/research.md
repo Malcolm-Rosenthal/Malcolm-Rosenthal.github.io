@@ -13,9 +13,8 @@ Let's talk science. I do some of it, and here is some of what I do.
 
 {{column}}
 
-{{door: taxonomic-bias}}
-
 {{mat: Going on now}}
+{{door: taxonomic-bias}}
 {{door: urban-vibrations}}
 
 {{/columns}}

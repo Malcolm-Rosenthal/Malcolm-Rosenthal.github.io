@@ -49,7 +49,8 @@ Settings a PAGE understands:
 
 Settings a SECTION's index.md understands, as well as title and order:
     mat     slate, moss, tan, indigo or plum
-    page    no: the section has no page of its own, only a mat
+    page    no: the section has no page of its own, only a mat. Any text
+            in its index.md is shown on the mat, in a small text box.
     draft   yes: skip the whole section (no mat, no pages) until it is ready
     show    how many doors the home board shows before the "more" door
     more    the name of that "more" door, which leads to the section page
@@ -460,6 +461,8 @@ def build():
         doors = [door(p, s, "") for p in shown]
         if s["has_page"] and s["more"] and len(s["top"]) > len(shown):
             doors.append(f'<a class="door" href="{href}"><span class="name">{esc(s["more"])}</span></a>')
+        if not s["has_page"] and s["body"]:  # a page-less section's own text is a text box on its mat
+            doors.append(f'<div class="box">{to_html(s["body"])}</div>')
         inside = (f'<div class="doors">{"".join(doors)}</div>' if doors
                   else slot(f'Nothing here yet. Add a file to content/{s["slug"]}/'))
         main.append(f'<section class="mat mc-{s["mat"]} p-{s["slug"]}">{tab}{inside}</section>')

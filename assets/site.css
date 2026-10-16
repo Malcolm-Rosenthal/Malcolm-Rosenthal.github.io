@@ -1,0 +1,426 @@
+/* ============================================================================
+   malcolm-rosenthal.github.io — the one stylesheet.
+
+   TWO STYLES, chosen by the visitor (assets/site.js, `data-style` on <html>):
+
+     fun      The Board's Chunky look, carried over from the app's looks.css.
+              Hard shadows, heavy black outlines, flat saturated fills, matte.
+     serious  The same pages with the materials taken away: one column, ink on
+              off-white, hairlines. It is written at the BOTTOM of this file as
+              a set of overrides, so everything it changes is in one place.
+
+   The HTML is identical in both.
+
+   Token names and values are the app's own (`--lk-*`, `--mc-*`, from
+   [data-look="chunky"] and [data-mats="bold"]), so a change there can be
+   copied here by name. Garden was tried beside it on 2026-10-04 and lost on
+   legibility; it is in git at dd9564a.
+   ========================================================================== */
+
+:root {
+  --lk-ink: #111111;
+  --lk-ink-soft: #444444;
+  --lk-board: #f6f5ea;
+  --lk-bar: #e6ebd3;
+  --lk-brand: #2f7a32;
+  --lk-paper: #ffffff;
+  --lk-btn: #ffffff;
+  --lk-accent: #8fd07a;
+  --lk-string: #b5482f;
+  --lk-line: 3px;
+  --lk-r-tile: 12px;
+  --lk-r-btn: 9px;
+  --mc-slate: #7fb8e6; --mc-moss: #8fd07a; --mc-tan: #ffd23f; --mc-indigo: #a99cf0; --mc-plum: #ff9fbf;
+
+  --rest: 2px;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  --font-serif: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+}
+
+/* A section's colour. On a mat it paints the mat; on <body> it tells an inside
+   page which section it belongs to, and the crumb and doors pick it up. */
+.mc-slate { --mat-fill: var(--mc-slate); }
+.mc-moss { --mat-fill: var(--mc-moss); }
+.mc-tan { --mat-fill: var(--mc-tan); }
+.mc-indigo { --mat-fill: var(--mc-indigo); }
+.mc-plum { --mat-fill: var(--mc-plum); }
+
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--lk-board); color: var(--lk-ink); }
+body { font-family: var(--font-sans); font-size: 16px; line-height: 1.5; min-height: 100vh; }
+a { color: inherit; }
+
+/* ---- the bar ------------------------------------------------------------ */
+
+.bar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 12px; padding: 9px 16px;
+  background: var(--lk-bar); border-bottom: 3px solid var(--lk-ink); position: sticky; top: 0; z-index: 10; }
+.brand { font-family: var(--font-mono); letter-spacing: .14em; font-weight: 700; font-size: 14px;
+  color: var(--lk-brand); text-decoration: none; text-transform: uppercase; margin-right: 6px; }
+.brand:hover { color: var(--lk-ink); }
+.bar .spacer { flex: 1; }
+
+/* The trail: where you are, as crumbs joined by a length of cord. */
+.trail { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 0; }
+.trail .sep { width: 16px; border-top: 3px solid var(--lk-ink); }
+.crumb { position: relative; overflow: hidden; display: inline-block; font-family: var(--font-serif); font-weight: 700;
+  font-size: 13px; text-decoration: none; background: var(--lk-paper); color: var(--lk-ink);
+  border: 2px solid var(--lk-ink); padding: 3px 9px 3px 15px; box-shadow: 2px 2px 0 var(--lk-ink); }
+.crumb::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 6px;
+  background: var(--mat-fill, var(--lk-accent)); border-right: 2px solid var(--lk-ink); }
+.crumb.home { --mat-fill: var(--lk-accent); }
+a.crumb:hover { background: var(--lk-bar); }
+
+.btn { font: 600 13px var(--font-sans); text-decoration: none; cursor: pointer; display: inline-block;
+  background: var(--lk-btn); color: var(--lk-ink); border: 2px solid var(--lk-ink);
+  border-radius: var(--lk-r-btn); box-shadow: 2px 2px 0 var(--lk-ink); padding: 5px 11px; }
+.btn:hover { background: var(--lk-accent); }
+/* A pressed button goes down onto its own shadow. */
+.btn:active { transform: translate(2px, 2px); box-shadow: 0 0 0 var(--lk-ink); }
+
+/* The switch says where it will take you, not where you are. */
+.when-serious { display: none; }
+[data-style="serious"] .when-fun { display: none; }
+[data-style="serious"] .when-serious { display: inline; }
+
+/* ---- the home board -----------------------------------------------------
+
+   Twelve columns, each piece nudged off the grid so it reads as placed by
+   hand rather than tabulated. A section is placed by its folder name
+   (`p-what-i-do` is content/what-i-do/); one with no rule of its own takes
+   half the board. On a phone the pieces stack in reading order. */
+
+.board { max-width: 1180px; margin: 0 auto; padding: 26px 20px 10px;
+  display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 30px 28px; align-items: start; }
+.board > .mat { grid-column: span 6; margin-top: 30px; }
+.board > .p-me            { grid-column: 1 / span 3;  grid-row: 1 / span 2; margin-top: 34px; justify-self: start; align-self: stretch; }
+.board > .p-note          { grid-column: 4 / span 5;  grid-row: 1 / span 2; margin-top: 34px; align-self: stretch; }
+.board > .p-photo         { grid-column: 9 / span 2;  grid-row: 1; margin-top: 12px; }
+.board > .p-what-i-do     { grid-column: 9 / span 3;  grid-row: 2; margin-top: 0; justify-self: start; }
+.board > .p-things-i-made { grid-column: 4 / span 4;  grid-row: 3; margin-top: 4px; }
+/* Me and What I do are tall, not wide: their doors stack, and Me's doors
+   spread out to fill the height of the intro note beside it. */
+@media (min-width: 861px) {
+  .board > .p-me, .board > .p-what-i-do { display: flex; flex-direction: column; }
+  .board > .p-me .doors, .board > .p-what-i-do .doors { flex: 1; flex-direction: column; flex-wrap: nowrap; }
+  .board > .p-me .doors { justify-content: space-between; }
+  .board > .p-me .door { width: auto; }  /* as wide as the text box beneath them */
+}
+.board > .p-blog      { grid-column: 2 / span 9; margin-top: 30px; }
+
+/* A small text box pinned on a home-board mat (a page-less section's own text). */
+.board .box { background: var(--lk-paper); color: var(--lk-ink); font-family: var(--font-serif); font-size: 15px; line-height: 1.35;
+  border: var(--lk-line) solid var(--lk-ink); box-shadow: var(--rest) var(--rest) 0 var(--lk-ink); padding: 10px 14px; }
+.board .box p { margin: 0; }
+.board .box p + p { margin-top: 3px; }
+[data-style="serious"] .board .box { background: none; border: none; box-shadow: none; padding: 5px 0; }
+
+/* ---- an inside page: one column of paper -------------------------------- */
+
+.page { max-width: 760px; margin: 0 auto; padding: 34px 16px 10px; }
+.page > * + * { margin-top: 30px; }
+
+/* ---- mats: a coloured surface with a tab for its name ------------------- */
+
+.mat { position: relative; padding: 20px; color: var(--lk-ink);
+  background: var(--mat-fill, var(--mc-slate));
+  border: var(--lk-line) solid var(--lk-ink);
+  box-shadow: var(--rest) var(--rest) 0 var(--lk-ink); }
+.mat > .tab { position: absolute; left: calc(-1 * var(--lk-line)); bottom: 100%; margin: 0;
+  padding: 3px 12px 2px; background: var(--lk-ink); color: #fff;
+  border: var(--lk-line) solid var(--lk-ink); border-bottom: none;
+  font: 700 11.5px var(--font-sans); letter-spacing: .08em; text-transform: uppercase; text-decoration: none;
+  white-space: nowrap; }
+a.tab:hover { background: var(--lk-accent); color: var(--lk-ink); }
+.note .mat { margin: 2.6em 0 1.8em; }  /* room above for the tab */
+.note .mat .doors { margin: 0; }
+/* Two columns inside a page; mats in them shrink to fit their doors and the doors stack. */
+.note .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 0 30px; align-items: start; }
+.note .cols > .col:last-child { justify-self: end; }
+.note .cols .mat { width: fit-content; }
+.note .cols .mat .doors { flex-direction: column; }
+.note .cols .col > .doors:first-child { margin-top: 2.6em; }  /* level with the top of a mat beside it */
+@media (max-width: 700px) { .note .cols { grid-template-columns: 1fr; } .note .cols > .col:last-child { justify-self: start; } }
+[data-style="serious"] .note .cols { display: block; }
+[data-style="serious"] .note .cols > .col:last-child { justify-self: start; }
+
+/* Text boxes and pinned pictures, for a page laid out on mats. */
+.note .box { background: var(--lk-paper); border: var(--lk-line) solid var(--lk-ink);
+  box-shadow: var(--rest) var(--rest) 0 var(--lk-ink); padding: 14px 18px; margin: 1.6em 0; }
+.note .mat > .box { margin: 0; }
+.note .box > :first-child { margin-top: 0; }
+.note .box > :last-child { margin-bottom: 0; }
+.note .mat > .tab ~ * ~ * { margin-top: 20px; }  /* space between what is pinned on a mat */
+.note .shot { margin: 0; }
+.note .shot a { display: block; }
+.note .shot img { display: block; width: 100%; height: auto; background: #fff; cursor: zoom-in;
+  border: var(--lk-line) solid var(--lk-ink); box-shadow: var(--rest) var(--rest) 0 var(--lk-ink); }
+.note .shots { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+@media (max-width: 700px) { .note .shots { grid-template-columns: 1fr; } }
+[data-style="serious"] .note .box { background: none; box-shadow: none; border: 1px solid var(--rule); }
+[data-style="serious"] .note .shot img { border: 1px solid var(--rule); box-shadow: none; }
+
+/* A picture opened full size, over the page. */
+.lightbox { position: fixed; inset: 0; z-index: 50; display: flex; align-items: center; justify-content: center;
+  padding: 3vh 3vw; background: rgba(24, 24, 24, .86); cursor: zoom-out; }
+.lightbox img { max-width: 100%; max-height: 100%; background: #fff;
+  border: var(--lk-line) solid var(--lk-ink); box-shadow: var(--rest) var(--rest) 0 var(--lk-ink); }
+
+/* ---- doors: a name and a band of its section's colour ------------------- */
+
+.doors { display: flex; flex-wrap: wrap; gap: 16px; }
+.door { position: relative; display: block; width: 150px; min-height: 76px; padding: 22px 10px 8px;
+  text-decoration: none; background: var(--lk-paper); color: var(--lk-ink);
+  border: var(--lk-line) solid var(--lk-ink); border-radius: var(--lk-r-tile);
+  box-shadow: var(--rest) var(--rest) 0 var(--lk-ink);
+  transition: box-shadow 140ms ease-out, transform 140ms ease-out; }
+.door::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 12px;
+  background: var(--mat-fill, var(--lk-accent)); border-bottom: var(--lk-line) solid var(--lk-ink);
+  border-radius: calc(var(--lk-r-tile) - var(--lk-line)) calc(var(--lk-r-tile) - var(--lk-line)) 0 0; }
+.door .name { display: block; font-family: var(--font-serif); font-weight: 700; font-size: 15px; line-height: 1.25; }
+.door .degree { display: block; font-family: var(--font-mono); font-size: 10px; color: var(--lk-ink-soft); margin-top: 6px; }
+/* Picked up: it rises off the surface and its shadow grows by the same amount. */
+.door:hover, .door:focus-visible { transform: translate(-4px, -4px); box-shadow: 6px 6px 0 var(--lk-ink); outline: none; }
+.door:focus-visible { box-shadow: 0 0 0 3px var(--lk-accent), 9px 9px 0 var(--lk-ink); }
+.door:active { transform: translate(2px, 2px); box-shadow: 0 0 0 var(--lk-ink); }
+
+/* ---- notes: paper you read ---------------------------------------------- */
+
+.note { background: var(--lk-paper); color: var(--lk-ink); border: var(--lk-line) solid var(--lk-ink);
+  box-shadow: var(--rest) var(--rest) 0 var(--lk-ink);
+  padding: 18px 20px; font-family: var(--font-serif); position: relative; }
+.note.long { padding: 26px 30px; font-size: 17px; line-height: 1.6; }
+.note > :first-child { margin-top: 0; }
+.note > :last-child { margin-bottom: 0; }
+.pin { position: absolute; top: -7px; left: 50%; margin-left: -7px; width: 14px; height: 14px;
+  border-radius: 50%; background: var(--lk-accent); border: 2px solid var(--lk-ink); }
+.age { white-space: nowrap; font-variant-numeric: tabular-nums; }
+.age sup { font-size: .7em; line-height: 0; }
+/* The job title under the name: set apart from the prose by type, not by colour. */
+.note .subtitle { font: 600 14.5px/1.4 var(--font-sans); color: var(--lk-ink-soft); margin: -2px 0 14px;
+  padding-bottom: 12px; border-bottom: var(--lk-line) dotted var(--lk-ink); }
+[data-style="serious"] .note .subtitle { border-bottom: 1px solid var(--rule); }
+.kicker { font: 700 11px var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--lk-ink-soft); }
+
+/* Everything Markdown can produce, inside a note. */
+.note h1 { font-size: 34px; line-height: 1.1; margin: 0 0 .35em; }
+.note h2 { font-size: 23px; line-height: 1.2; margin: 1.5em 0 .4em; }
+.note h3 { font-size: 18px; margin: 1.3em 0 .3em; }
+.note p, .note ul, .note ol, .note blockquote, .note pre, .note table, .note figure { margin: 0 0 .9em; }
+.note ul, .note ol { padding-left: 1.3em; }
+.note li { margin-bottom: .25em; }
+.note a:not(.btn):not(.door):not(.file) { color: var(--lk-string); text-underline-offset: 2px; }
+.note a:not(.btn):not(.door):not(.file):hover { background: var(--lk-accent); color: var(--lk-ink); }
+.note img { max-width: 100%; height: auto; border: var(--lk-line) solid var(--lk-ink); }
+.note blockquote { margin-left: 0; padding: 2px 0 2px 16px; border-left: 6px solid var(--lk-accent); }
+.note code { font: .85em var(--font-mono); background: var(--lk-bar); padding: 1px 4px; }
+.note pre { background: var(--lk-bar); border: 2px solid var(--lk-ink); padding: 12px 14px; overflow-x: auto;
+  line-height: 1.45; }
+.note pre code { background: none; padding: 0; }
+.note hr { border: none; border-top: var(--lk-line) dotted var(--lk-ink); margin: 1.6em 0; }
+.note table { border-collapse: collapse; font: 14px var(--font-sans); display: block; overflow-x: auto; }
+.note th, .note td { border: 2px solid var(--lk-ink); padding: 5px 10px; text-align: left; }
+.note th { background: var(--lk-bar); }
+.note .footnotes { font-size: .85em; }
+
+/* A CV (layout: cv in the page's settings). Each line stays as typed; a
+   line that wraps hangs, as references do; a date sits at the right edge. */
+.cv { font-size: 16px; line-height: 1.45; }
+.cv h2 { font: 700 13px var(--font-sans); letter-spacing: .12em; text-transform: uppercase;
+  margin: 2.4em 0 1.1em; padding-bottom: 6px; border-bottom: var(--lk-line) solid var(--lk-ink); }
+.cv h1 + h2 { margin-top: 1.2em; }
+.cv h3 { font-size: 17px; margin: 1.4em 0 .7em; }
+.cv-entry { margin: 0 0 1.05em; }
+.cv-line { display: flex; gap: 18px; align-items: baseline; }
+.cv-what { flex: 1; min-width: 0; }
+.cv-entry.solo .cv-what { padding-left: 1.6em; text-indent: -1.6em; }
+.cv-when { flex: none; font: 12px var(--font-mono); color: var(--lk-ink-soft); white-space: nowrap; text-align: right; }
+.cv a[href^="http"] { word-break: break-word; }
+.note .download { float: right; margin: 6px 0 0 16px; }
+@media (max-width: 860px) { .note .download { float: none; margin: 0 0 1em; } }
+[data-style="serious"] .cv h2 { border-bottom: 1px solid var(--rule); }
+
+/* Doors set into a page's text: the way on to the next page of the story. */
+.note .doors { margin: 1.4em 0 1.6em; font-size: 16px; line-height: 1.25; }
+.note .door { width: 190px; }
+.doors > .file { width: 190px; justify-content: flex-start; padding-top: 14px; }
+.note .file .fileName { font-size: 15px; }
+.note .file { --mat-fill: var(--lk-paper); }  /* the folded corner shows the paper behind it */
+.note h2 { scroll-margin-top: 90px; }
+[data-style="serious"] .doors > .file { display: flex; width: auto; padding: 5px 0; flex-direction: row; gap: 12px; align-items: baseline; }
+[data-style="serious"] .doors > .file .fileName { font-weight: 400; font-size: 17px; order: -1; }
+[data-style="serious"] .note .doors { margin: 1em 0 1.2em; }
+
+/* A page with a sidebar: the paper on the left, the documents on the right. */
+.page.has-side { max-width: 1080px; display: grid; grid-template-columns: minmax(0, 1fr) 260px;
+  gap: 0 32px; align-items: start; }
+.page.has-side > * + * { margin-top: 0; }
+.side { position: sticky; top: 84px; margin-top: 26px; }
+.side .mat { padding: 16px; }
+
+/* Documents: the Board's file tile. Cool aqua where everything else is paper,
+   and a dog-eared corner, so a paper never reads as a note. */
+:root { --tile: #e4f1f7; --tile-deep: #9dbfca; }
+.files { display: flex; flex-direction: column; gap: 14px; }
+.file { position: relative; display: flex; flex-direction: column; gap: 5px; padding: 12px 30px 11px 12px;
+  text-decoration: none; color: var(--lk-ink); background: var(--tile);
+  border: var(--lk-line) solid var(--lk-ink); border-radius: 5px;
+  box-shadow: var(--rest) var(--rest) 0 var(--lk-ink); transition: box-shadow 140ms ease-out, transform 140ms ease-out; }
+.file:hover, .file:focus-visible { transform: translate(-3px, -3px); box-shadow: 5px 5px 0 var(--lk-ink); outline: none; }
+.file:active { transform: translate(2px, 2px); box-shadow: 0 0 0 var(--lk-ink); }
+.fileMark { position: absolute; top: 0; right: 0; width: 22px; height: 22px; border-radius: 0 2px 0 0;
+  background: linear-gradient(225deg, var(--mat-fill, var(--lk-board)) 0 50%, var(--lk-ink) 50% calc(50% + 2px), var(--tile-deep) calc(50% + 2px)); }
+.fileKind { font: 700 9.5px var(--font-mono); letter-spacing: .09em; text-transform: uppercase; color: var(--lk-ink-soft); }
+.fileName { font: 700 14px/1.3 var(--font-serif); }
+.fileWhere { font: 12.5px/1.3 var(--font-serif); color: var(--lk-ink-soft); }
+.cv-entry { scroll-margin-top: 90px; }
+.cv-entry:target { background: var(--tile); outline: var(--lk-line) solid var(--tile); }
+
+@media (max-width: 1000px) {
+  .page.has-side { display: block; max-width: 760px; }
+  .page.has-side > * + * { margin-top: 30px; }
+  .side { position: static; margin-top: 52px; }
+}
+
+[data-style="serious"] .page.has-side { max-width: 1000px; }
+[data-style="serious"] .side .mat { padding: 16px 0 0; }
+[data-style="serious"] .file { background: none; border: none; box-shadow: none; padding: 0; transform: none; }
+[data-style="serious"] .fileMark { display: none; }
+[data-style="serious"] .file .fileName { font-weight: 400; text-decoration: underline; text-decoration-color: var(--rule);
+  text-underline-offset: 3px; }
+[data-style="serious"] .file:hover .fileName { color: var(--lk-string); }
+[data-style="serious"] .cv-entry:target { background: #f0eee6; outline-color: #f0eee6; }
+
+/* Pictures, animations and equations inside a long page. Animations sit to
+   the right of the paragraph they illustrate, as they did in the Doc; on a
+   phone they take the full width. */
+.note.long::after { content: ""; display: block; clear: both; }
+.note h2, .note h3 { clear: both; }
+.note .anim { float: right; width: 46%; margin: 4px 0 14px 24px; }
+.note .anim.tall { width: 22%; }
+.note .anim video, .note .pic img { display: block; width: 100%; height: auto; background: #fff;
+  border: var(--lk-line) solid var(--lk-ink); box-shadow: var(--rest) var(--rest) 0 var(--lk-ink); }
+.note .pic { max-width: 380px; margin: 0 auto 1.4em; }
+.note .pic img { margin: 0; }
+.note .cap { font-style: italic; font-size: 14.5px; line-height: 1.4; text-align: center; color: var(--lk-ink-soft); margin: 8px 0 0; }
+.note .eq { overflow-x: auto; margin: 0 0 1.1em; padding: 4px 0; font-size: 1.12em; }
+.note .always { text-align: center; font-family: var(--font-sans); font-size: 18px; margin: 1.2em 0; }
+.always .w3 { font-weight: 300; } .always .w6 { font-weight: 600; } .always .w9 { font-weight: 900; }
+.note .footnotes { clear: both; font-size: 14.5px; line-height: 1.5; margin-top: 2.4em; padding-top: 10px;
+  border-top: var(--lk-line) dotted var(--lk-ink); }
+.note .footnotes hr { display: none; }
+.note sup.footnote-ref a, .note .footnoteBackLink { text-decoration: none; }
+@media (max-width: 700px) {
+  .note .anim { float: none; width: 100%; margin: 0 0 1.2em; }
+  .note .anim.tall { width: 45%; margin: 0 auto 1.2em; }
+}
+[data-style="serious"] .note .anim video, [data-style="serious"] .note .pic img { border: 1px solid var(--rule); box-shadow: none; }
+[data-style="serious"] .note .footnotes { border-top: 1px solid var(--rule); }
+
+/* Rows: a list of dated things, newest first. */
+.rows { list-style: none; margin: 0; padding: 0; font-family: var(--font-serif); }
+.rows li { display: flex; gap: 14px; align-items: baseline; padding: 10px 0; border-top: 2px dotted var(--lk-ink); }
+.rows li:first-child { border-top: none; padding-top: 0; }
+.rows li:last-child { padding-bottom: 0; }
+.rows .when { font: 11px var(--font-mono); color: var(--lk-ink-soft); flex: none; width: 130px; }
+.rows .what { flex: 1; font-weight: 700; font-size: 17px; }
+
+.photo { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; background: var(--mc-slate);
+  border: var(--lk-line) solid var(--lk-ink); box-shadow: var(--rest) var(--rest) 0 var(--lk-ink); }
+
+.foot { padding: 28px 16px 40px; }
+
+/* ---- NOT PART OF THE DESIGN: put there by build.py where a page is empty -- */
+
+.slot { display: block; border: 2px dashed #8a8a80; padding: 8px 10px; margin: 0 0 .9em;
+  font: 12px/1.45 var(--font-mono); color: #5a5a52; background: none; }
+
+/* ---- phones ------------------------------------------------------------- */
+
+@media (max-width: 860px) {
+  .board { grid-template-columns: 1fr; gap: 22px; padding: 18px 16px 6px; }
+  .board > * { grid-column: 1 !important; grid-row: auto !important; margin-top: 0 !important; justify-self: stretch !important; }
+  .board > .mat { margin-top: 26px !important; }
+  .board .box { flex: 1 1 100%; }
+  .board > .p-photo { max-width: 160px; }
+  .door { width: calc(50% - 8px); }
+  .note.long { padding: 20px 18px; }
+  .rows li { flex-direction: column; gap: 2px; }
+  .rows .when { width: auto; }
+}
+
+/* ============================================================================
+   SERIOUS.
+
+   The materials come off and what is left is a document: one column, ink on
+   off-white, hairlines for edges, one quiet colour for links. No shadows, no
+   fills, nothing lifts. The home board becomes a list of its own sections.
+
+   Every rule here starts with [data-style="serious"], which outweighs the
+   plain rules above.
+   ========================================================================== */
+
+[data-style="serious"] {
+  --lk-ink: #1d1d1b;
+  --lk-ink-soft: #5c5c57;
+  --lk-board: #fbfaf6;
+  --lk-paper: #fbfaf6;
+  --lk-bar: #f0eee6;
+  --lk-string: #2f5d3a;
+  --lk-accent: #2f5d3a;
+  --rule: #cfcdc4;
+}
+
+[data-style="serious"] .bar { background: var(--lk-board); border-bottom: 1px solid var(--rule); padding: 12px 16px; }
+[data-style="serious"] .brand { color: var(--lk-ink); font-family: var(--font-serif); letter-spacing: 0;
+  text-transform: none; font-size: 17px; }
+[data-style="serious"] .brand:hover { color: var(--lk-string); }
+[data-style="serious"] .trail .sep { width: auto; border: none; }
+[data-style="serious"] .trail .sep::before { content: '/'; color: var(--lk-ink-soft); padding: 0 8px; font-size: 13px; }
+[data-style="serious"] .crumb { background: none; border: none; box-shadow: none; padding: 0;
+  font-weight: 400; font-size: 14px; color: var(--lk-ink-soft); }
+[data-style="serious"] .crumb::before { display: none; }
+[data-style="serious"] a.crumb { text-decoration: underline; }
+[data-style="serious"] a.crumb:hover { background: none; color: var(--lk-string); }
+[data-style="serious"] .btn { background: none; color: var(--lk-ink); border: 1px solid var(--rule); border-radius: 3px;
+  box-shadow: none; font-weight: 500; }
+[data-style="serious"] .btn:hover { border-color: var(--lk-ink); background: none; }
+[data-style="serious"] .btn:active { transform: none; }
+
+[data-style="serious"] .board { display: block; max-width: 680px; padding: 40px 16px 10px; }
+[data-style="serious"] .board > * { margin-top: 0 !important; }
+[data-style="serious"] .page { max-width: 680px; padding-top: 40px; }
+
+[data-style="serious"] .note { background: none; border: none; box-shadow: none; padding: 0; }
+[data-style="serious"] .pin { display: none; }
+[data-style="serious"] .kicker { font-weight: 400; }
+[data-style="serious"] .board > .photo { max-width: 130px; margin-top: 22px !important; }
+[data-style="serious"] .photo { border: 1px solid var(--rule); border-radius: 2px; box-shadow: none; }
+[data-style="serious"] .note a:not(.btn):not(.door):not(.file):hover { background: none; color: var(--lk-ink); }
+[data-style="serious"] .note img, [data-style="serious"] .note pre { border: 1px solid var(--rule); }
+[data-style="serious"] .note th, [data-style="serious"] .note td { border: 1px solid var(--rule); }
+[data-style="serious"] .note blockquote { border-left: 2px solid var(--rule); }
+[data-style="serious"] .note hr { border-top: 1px solid var(--rule); }
+
+[data-style="serious"] .mat, [data-style="serious"] .board > .mat { background: none; border: none;
+  border-top: 1px solid var(--rule); box-shadow: none; padding: 16px 0 0; margin-top: 34px !important; }
+[data-style="serious"] .mat > .tab { position: static; display: block; background: none; border: none; padding: 0;
+  margin: 0 0 8px; color: var(--lk-ink-soft); font: 700 12px var(--font-sans); letter-spacing: .1em; }
+[data-style="serious"] a.tab:hover { background: none; color: var(--lk-string); }
+
+[data-style="serious"] .doors { display: block; }
+[data-style="serious"] .door { width: auto; min-height: 0; padding: 5px 0; background: none; border: none;
+  border-radius: 0; box-shadow: none; transition: none;
+  display: flex; gap: 12px; align-items: baseline; }
+[data-style="serious"] .door::before { display: none; }
+[data-style="serious"] .door .name { font-weight: 400; font-size: 17px; text-decoration: underline;
+  text-decoration-color: var(--rule); text-underline-offset: 3px; }
+[data-style="serious"] .door .degree { margin: 0; font-size: 11px; }
+[data-style="serious"] .door:hover, [data-style="serious"] .door:focus-visible, [data-style="serious"] .door:active {
+  transform: none; box-shadow: none; }
+[data-style="serious"] .door:hover .name { color: var(--lk-string); text-decoration-color: var(--lk-string); }
+[data-style="serious"] .door:focus-visible { outline: 2px solid var(--lk-string); outline-offset: 2px; }
+
+[data-style="serious"] .rows li { border-top: 1px solid var(--rule); }
+[data-style="serious"] .rows .what { font-weight: 400; }
+[data-style="serious"] .slot { border: 1px dashed #b5b3a9; }

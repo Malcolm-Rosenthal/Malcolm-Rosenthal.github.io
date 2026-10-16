@@ -1,5 +1,6 @@
 ---
 title: Physics 1
+door: Read my physics teaching material
 parent: teaching
 ---
 

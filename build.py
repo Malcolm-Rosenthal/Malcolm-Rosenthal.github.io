@@ -28,6 +28,7 @@ Every .md file may start with settings between two lines of three dashes:
 
 Settings a PAGE understands:
     title   the door's name and the page's heading (default: from the file name)
+    door    different words for the door than the page's heading (default: the title)
     order   position among its siblings, low first (default 100)
     date    2026-10-04. Dated pages sort newest first and show the date.
     note    a small line under the name on the door
@@ -338,6 +339,7 @@ def load():
                 "title": m.get("title") or title_from(f.stem),
                 "order": number(m.get("order"), 100),
                 "date": parse_date(m.get("date"), f),
+                "door": m.get("door", ""),
                 "note": m.get("note", ""),
                 "link": m.get("link", ""),
                 "layout": m.get("layout", ""),
@@ -391,7 +393,7 @@ def door(page, section, root):
     if page["link"].lower().endswith(".pdf"):
         return (f'<a class="file" href="{href}"><span class="fileMark"></span><span class="fileKind">PDF</span>'
                 f'<span class="fileName">{inline(page["title"])}</span></a>')
-    return f'<a class="door" href="{href}"><span class="name">{inline(page["title"])}</span>{degree}</a>'
+    return f'<a class="door" href="{href}"><span class="name">{inline(page["door"] or page["title"])}</span>{degree}</a>'
 
 
 def crumb(label, href=None, home=False):
